@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feed de Projetos</title>
+</head>
+<body>
+    <h1>Feed de Projetos</h1>
+    {% for project in object_list %}
+        <div class="project">
+            <h2>{{ project.title }}</h2>
+            <p>{{ project.body }}</p>
+            <p><small>Postado por {{ project.author.user.username }} em {{ project.calendar }}</small></p>  <!-- Ajustado para 'date_posted' e 'author.user.username' -->
+            {% if project.author == request.user.profile or request.user.is_staff %}  <!-- Verifique se o autor é o perfil do usuário logado -->
+                <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Excluir</button>
+                </form>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>Nenhum projeto encontrado.</p>
+    {% endfor %}
+</body>
+</html>

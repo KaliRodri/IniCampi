@@ -1,5 +1,5 @@
 from django.contrib import admin
-from feed.models import Student, Project, Comment, Teacher
+from feed.models import Profile, Project, Comment
 # Register your models here.
 
 class ProjectInLine(admin.TabularInline): 
@@ -11,21 +11,9 @@ class CommentInLine(admin.TabularInline):
     model = Comment
     extra = 0
     fields = ('author', 'body')
-    
-class TeacherInLine(admin.TabularInline): 
-    model = Teacher
-    extra = 0
 
-@admin.register(Teacher)
-class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('matricula', 'user_name', 'summary')
-    inlines = [ProjectInLine]
-    
-@admin.register(Student)
-class StudentAdmin(admin.ModelAdmin):
-    list_display = ('matricula', 'user_name', 'summary')
-    inlines = [CommentInLine]
-
-
-
-    
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'role', 'matricula', 'summary')
+    inlines = [ProjectInLine, CommentInLine]
+    list_filter = ('role',)    
