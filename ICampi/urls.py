@@ -16,11 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from feed.views import ProjectsListView
 from django.conf.urls import include
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('feed/', include('feed.urls')),
-    path('accounts/', include('allauth.urls'))
+    path('accounts/', include('allauth.urls')),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+
 ]

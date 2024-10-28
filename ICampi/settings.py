@@ -42,6 +42,8 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
 ]
 
+# LOGIN_URL = 'login' substituir pela url
+
 ROOT_URLCONF = 'ICampi.urls'
 
 TEMPLATES = [
