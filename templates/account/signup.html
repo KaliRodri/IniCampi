@@ -1,45 +1,106 @@
-{% extends "account/base_entrance.html" %}
-{% load allauth i18n %}
-{% block head_title %}
-    {% trans "Signup" %}
-{% endblock head_title %}
-{% block content %}
-    {% element h1 %}
-        {% trans "Sign Up" %}
-    {% endelement %}
-    {% setvar link %}
-        <a href="{{ login_url }}">
-        {% endsetvar %}
-        {% setvar end_link %}
-        </a>
-    {% endsetvar %}
-    {% element p %}
-        {% blocktranslate %}Already have an account? Then please {{ link }}sign in{{ end_link }}.{% endblocktranslate %}
-    {% endelement %}
-    {% if not SOCIALACCOUNT_ONLY %}
-        {% url 'account_signup' as action_url %}
-        {% element form form=form method="post" action=action_url tags="entrance,signup" %}
-            {% slot body %}
-                {% csrf_token %}
-                {% element fields form=form unlabeled=True %}
-                {% endelement %}
-                {{ redirect_field }}
-            {% endslot %}
-            {% slot actions %}
-                {% element button tags="prominent,signup" type="submit" %}
-                    {% trans "Sign Up" %}
-                {% endelement %}
-            {% endslot %}
-        {% endelement %}
-    {% endif %}
-    {% if PASSKEY_SIGNUP_ENABLED %}
-        {% element hr %}
-        {% endelement %}
-        {% element button href=signup_by_passkey_url tags="prominent,signup,outline,primary" %}
-            {% trans "Sign up using a passkey" %}
-        {% endelement %}
-    {% endif %}
-    {% if SOCIALACCOUNT_ENABLED %}
-        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
-    {% endif %}
-{% endblock content %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de Cadastro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body, html {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        .cadastro-container {
+            background-color: #ffffff;
+            padding: 2rem;
+            width: 320px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .cadastro-container h2 {
+            margin-bottom: 1rem;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .cadastro-container form input {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: 1px solid #0a2b42;
+            border-radius: 5px;
+        }
+
+        .cadastro-container .termo-link {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #f0c000;
+            display: block;
+            text-decoration: none;
+        }
+
+        .cadastro-container form button {
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 1rem;
+            background-color: #ccc;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .cadastro-container form button:hover {
+            background-color: #bbb;
+        }
+
+        .links {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .links a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .links a span {
+            color: #f0c000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="cadastro-container">
+        <h2>CADASTRO</h2>
+        <form method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            <input type="text" placeholder="Matrícula" name="username">
+            <input type="email" placeholder="Email" name="email">
+            <input type="password" placeholder="Senha" name="password1">
+            <input type="password" placeholder="Confirme a Senha" name="password2">
+            <button type="submit">REGISTRAR</button>
+        </form>
+        <div class="links">
+            <a href="{% url 'account_login' %}">Já tem uma conta? <span>Fazer login</span></a>
+        </div>
+    </div>
+</body>
+</html>
