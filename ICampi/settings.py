@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 ]
 
+SITE_ID = 1
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -62,7 +64,8 @@ TEMPLATES = [
         },
     },
 ]
-
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
+LOGIN_REDIRECT_URL = 'feed/'
 WSGI_APPLICATION = 'ICampi.wsgi.application'
 
 
@@ -76,10 +79,10 @@ DATABASES = {
     }
 }
 
-AUTHENTICATION_BACKENDS = {
+AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
-}
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
