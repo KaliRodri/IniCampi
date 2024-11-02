@@ -1,7 +1,8 @@
 from django.urls import path
-from feed.views import ProjectsListView, TeacherListView, ProjectDetailView, TeacherDetailView
+from feed.views import ProjectListView, delete_project
 
 urlpatterns = [
-    path('projects/', ProjectsListView.as_view(), name='projects'),
-    path('teachers/', TeacherListView.as_view(), name='projects'),
+    path('', ProjectListView.as_view(), name='home'),
+    path('delete/<int:project_id>/', delete_project, name='delete_project'),
+
 ]
