@@ -92,10 +92,22 @@
         <h2>CADASTRO</h2>
         <form method="post" action="{% url 'account_signup' %}">
             {% csrf_token %}
-            <input type="text" placeholder="Matrícula" name="username">
-            <input type="email" placeholder="Email" name="email">
-            <input type="password" placeholder="Senha" name="password1">
-            <input type="password" placeholder="Confirme a Senha" name="password2">
+            <input type="text" placeholder="Matrícula" name="username" required>
+            <input type="email" placeholder="Email" name="email" required>
+            <input type="password" placeholder="Senha" name="password1" required>
+            <input type="password" placeholder="Confirme a Senha" name="password2" required>
+
+
+            {% if form.errors %}
+                <ul class="error-list">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ field }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            
             <button type="submit">REGISTRAR</button>
         </form>
         <div class="links">

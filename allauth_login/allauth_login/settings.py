@@ -33,10 +33,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 ]
 
-AUTHENTICATION_BACKENDS = {
+AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
-}
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -67,6 +67,8 @@ TEMPLATES = [
     },
 ]
 
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
+LOGIN_REDIRECT_URL = 'feed/'
 WSGI_APPLICATION = 'allauth_login.wsgi.application'
 
 

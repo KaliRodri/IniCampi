@@ -86,6 +86,12 @@
             color: #f0c000;
             font-weight: bold;
         }
+
+        .error-list {
+            color: red; /* Cor para mensagens de erro */
+            margin-bottom: 1rem;
+            list-style-type: none; /* Remove a lista de marcadores */
+        }
     </style>
 </head>
 <body>
@@ -96,8 +102,19 @@
         <h2>LOGIN</h2>
         <form method="post" action="{% url 'account_login' %}">
             {% csrf_token %}
-            <input type="text" placeholder="Matrícula" name="username">
-            <input type="password" placeholder="Senha" name="password">
+            <input type="text" placeholder="Matrícula" name="login" required autocomplete="username">
+            <input type="password" placeholder="Senha" name="password" required autocomplete="current-password">
+
+            {% if form.errors %}
+            <ul class="error-list">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            {% endif %}
+
             <button type="submit">LOGIN</button>
         </form>
         <div class="links">
