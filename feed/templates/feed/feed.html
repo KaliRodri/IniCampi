@@ -3,23 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <title>Feed de Projetos</title>
+    <style>
+        /* CSS básico para estilizar o layout */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .logout-form {
+            display: inline;
+        }
+        .project {
+            background-color: white;
+            padding: 15px;
+            margin: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .project h2 {
+            margin-top: 0;
+        }
+        .project small {
+            color: #666;
+        }
+        .project button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .project button:hover {
+            background-color: #c9302c;
+        }
+
+        .comment-section, .comment-form {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+        }
+        .comment {
+            margin-bottom: 8px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Feed de Projetos</h1>
-    {% for project in object_list %}
-        <div class="project">
-            <h2>{{ project.title }}</h2>
-            <p>{{ project.body }}</p>
-            <p><small>Postado por {{ project.author.user.username }} em {{ project.calendar }}</small></p>  <!-- Ajustado para 'date_posted' e 'author.user.username' -->
-            {% if project.author == request.user.profile or request.user.is_staff %}  <!-- Verifique se o autor é o perfil do usuário logado -->
-                <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
+    <header>
+        <h1>Feed de Projetos</h1>
+        <nav>
+            <a href=" ">Home</a>
+            <a href=" ">Profile</a>
+            <form class="logout-form" action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+    </header>
+
+    <main>
+        {% for project in projects %}
+            <div class="project">
+                <h2>{{ project.title }}</h2>
+                <p>{{ project.body }}</p>
+                <p><small>Postado por {{ project.author.user.username }} em {{ project.calendar }}</small></p>
+
+                {% if project.author == request.user.profile or request.user.is_staff %}
+                    <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Excluir</button>
+                    </form>
+                {% endif %}
+
+                <!-- Seção de comentários -->
+                <div class="comment-section">
+                    <h3>Comentários</h3>
+                    {% for comment in project.comments.all %}
+                        <div class="comment">
+                            <p><strong>{{ comment.author.user.username }}:</strong> {{ comment.body }}</p>
+                            <p><small>Comentado em {{ comment.created_at }}</small></p>
+                        </div>
+                    {% empty %}
+                        <p>Nenhum comentário ainda.</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Formulário para adicionar novo comentário -->
+                <form class="comment-form" action="{% url 'add_comment' project.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit">Excluir</button>
+                    {{ comment_form.body }}
+                    <button type="submit">Comentar</button>
                 </form>
-            {% endif %}
-        </div>
-    {% empty %}
-        <p>Nenhum projeto encontrado.</p>
-    {% endfor %}
+            </div>
+        {% empty %}
+            <p>Nenhum projeto encontrado.</p>
+        {% endfor %}
+    </main>
 </body>
 </html>
