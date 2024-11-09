@@ -22,7 +22,6 @@
             overflow: hidden;
         }
 
-        
         .background img {
             position: fixed;
             top: 0;
@@ -98,6 +97,12 @@
             color: #f0c000;
             font-weight: bold;
         }
+
+        .error-list {
+            color: red;
+            margin-top: 10px;
+            list-style: none;
+        }
     </style>
 </head>
 <body>
@@ -108,11 +113,10 @@
         <h2>CADASTRO</h2>
         <form method="post" action="{% url 'account_signup' %}">
             {% csrf_token %}
-            <input type="text" placeholder="Matrícula" name="username" required>
+            <input type="text" placeholder="username" name="username" required>
             <input type="email" placeholder="Email" name="email" required>
             <input type="password" placeholder="Senha" name="password1" required>
             <input type="password" placeholder="Confirme a Senha" name="password2" required>
-
 
             {% if form.errors %}
                 <ul class="error-list">
