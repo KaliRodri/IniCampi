@@ -16,7 +16,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = '/feed/'
+LOGIN_REDIRECT_URL = '/'
 
 # Application definition
 
@@ -46,8 +46,6 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-# LOGIN_URL = 'login' substituir pela url
-
 ROOT_URLCONF = 'ICampi.urls'
 
 TEMPLATES = [
@@ -66,7 +64,6 @@ TEMPLATES = [
     },
 ]
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
-LOGIN_REDIRECT_URL = 'feed/'
 WSGI_APPLICATION = 'ICampi.wsgi.application'
 
 
@@ -120,6 +117,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
