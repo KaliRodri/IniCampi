@@ -6,7 +6,6 @@
     <title>Document</title>
 </head>
 <body>
-    {% extends "base.html" %}
 
 {% block content %}
 <h2>Perfil de {{ profile.user.username }}</h2>
@@ -16,7 +15,7 @@
 {% if profile.profile_image %}
     <img src="{{ profile.profile_image.url }}" alt="Foto de perfil">
 {% endif %}
-<a href="{% url 'edit_profile' %}">Editar perfil</a>
+<a href=" ">Editar perfil</a>
 {% endblock %}
 
     
