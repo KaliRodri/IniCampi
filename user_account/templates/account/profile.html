@@ -9,7 +9,7 @@
 
 {% block content %}
 <h2>Perfil de {{ profile.user.username }}</h2>
-<p>Bio: {{ profile.bio }}</p>
+<p>Bio: {{ profile.summary }}</p>
 <p>Localização: {{ profile.location }}</p>
 <p>Data de nascimento: {{ profile.birth_date }}</p>
 {% if profile.profile_image %}
