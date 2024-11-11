@@ -5,6 +5,22 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from .models import Project, Comment
 from .forms import CommentForm
+from .forms import ProjectForm
+
+@login_required
+def add_project(request):
+    if request.user.profile.role != 'teacher':
+        return redirect('home')  # Redireciona caso o usuário não seja professor
+
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = ProjectForm()
+
+    return render(request, 'feed/add_project.html', {'form': form})
 
 class ProjectListView(LoginRequiredMixin, generic.ListView):
     model = Project
