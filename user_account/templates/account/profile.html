@@ -3,20 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Perfil de {{ profile.user.username }}</title>
+    <style>
+        /* Estilos Gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        /* Cabeçalho */
+        header {
+            background-color: #5c6bc0;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 25px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        header .logout {
+            background-color: #1f3c88;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Imagem do cabeçalho */
+        .header-image img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Estrutura principal */
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            gap: 30px;
+        }
+
+        /* Contêiner principal do perfil para posicionamento relativo */
+        .profile-wrapper {
+            position: relative;
+            width: 300px;
+        }
+
+        /* Perfil do usuário */
+        .profile-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 60px 20px 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Avatar (foto de perfil) */
+        .avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid white;
+            object-fit: cover;
+            position: absolute;
+            top: -100px; /* Ajusta a altura do avatar para que fique sobreposto ao contêiner do perfil */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .username {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 100px; /* Adiciona margem para compensar o espaço do avatar */
+            text-align: center;
+            color: #333;
+        }
+
+        .details {
+            color: #555;
+            font-size: 16px;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .follow-btn, .edit-avatar-btn {
+            background-color: #5c6bc0;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        /* Seção de Projetos */
+        .projects-container {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .project-card {
+            width: 200px;
+            height: 350px;
+            background-color: #5c6bc0;
+            color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .view-btn {
+            background-color: #1f3c88;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Seção de Contatos */
+        .contacts-container {
+            width: 250px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #555;
+        }
+
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #ddd;
+            border-radius: 50%;
+        }
+
+        .contact span {
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <div class="logo">Minha Plataforma</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/feed">Feed</a>
+            <a href="/profile">Perfil</a>
+            <button class="logout">Logout</button>
+        </nav>
+    </header>
 
-{% block content %}
-<h2>Perfil de {{ profile.user.username }}</h2>
-<p>Bio: {{ profile.summary }}</p>
-<p>Localização: {{ profile.location }}</p>
-<p>Data de nascimento: {{ profile.birth_date }}</p>
-{% if profile.profile_image %}
-    <img src="{{ profile.profile_image.url }}" alt="Foto de perfil">
-{% endif %}
-<a href=" ">Editar perfil</a>
-{% endblock %}
+    <!-- Imagem abaixo do cabeçalho -->
+    <div class="header-image">
+        <img src="/static/images/Imagem_Fundo_Perfil.jpeg" alt="Imagem abaixo do cabeçalho">
+    </div>
 
+    <div class="container">
+        <!-- Contêiner de posicionamento relativo para o perfil -->
+        <div class="profile-wrapper">
+            {% if profile.profile_image and profile.profile_image.url %}
+                <img src="{{ profile.profile_image.url }}" alt="Foto de perfil" class="avatar">
+            {% else %}
+                <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
+            {% endif %}
+
+            <div class="profile-container">
+                <h2 class="username">{{ profile.user.username }}</h2>
+                <p class="details">{{ profile.location }}  {{ profile.department }}</p>
+                <button class="follow-btn">Seguir</button>
+                
+                <!-- Botão separado para editar avatar -->
+                <form action="{% url 'profile' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <button type="submit" class="edit-avatar-btn">Editar Avatar</button>
+                </form>
+
+                <!-- Bio do usuário -->
+                <div class="bio">
+                    <p>{{ profile.bio }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projetos -->
+        <div class="projects-container">
+            <div class="project-card">
+                <h3>Nome Projeto</h3>
+                <button class="view-btn">Visualizar</button>
+            </div>
+            <div class="project-card">
+                <h3>Nome Projeto</h3>
+                <button class="view-btn">Visualizar</button>
+            </div>
+            <div class="project-card">
+                <h3>Nome Projeto</h3>
+                <button class="view-btn">Visualizar</button>
+            </div>
+        </div>
+
+        <!-- Contatos -->
+        <div class="contacts-container">
+            <div class="contact">
+                <div class="contact-avatar"></div>
+                <span>Contato 1</span>
+            </div>
+            <div class="contact">
+                <div class="contact-avatar"></div>
+                <span>Contato 2</span>
+            </div>
+            <div class="contact">
+                <div class="contact-avatar"></div>
+                <span>Contato 3</span>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
