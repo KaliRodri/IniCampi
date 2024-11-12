@@ -1,10 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from feed.models import Profile
 from .forms import ProfileForm
 from django.http import HttpResponse
+from django.urls import reverse
+from django.contrib import messages
+from feed.models import Project
+
+
+
 
 # Exibir o perfil
 @login_required
@@ -70,3 +76,13 @@ def edit_summary(request):
         request.user.profile.save()
         return redirect('profile')
     return redirect('profile')
+
+@login_required
+def unsubscribe_from_project(request, project_id):
+    profile = request.user.profile
+    project = get_object_or_404(Project, id=project_id)
+    
+    if profile in project.students.all():
+        project.students.remove(profile)
+    
+    return redirect(reverse('profile_view'))

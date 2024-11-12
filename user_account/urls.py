@@ -8,5 +8,6 @@ urlpatterns = [
     path('edit_background/', views.edit_background, name='edit_background'),
     path('edit-summary/', views.edit_summary, name='edit_summary'),
     path('profile/<str:username>/', views.profile, name='profile'),
+    path('unsubscribe/<int:project_id>/', views.unsubscribe_from_project, name='unsubscribe_from_project'),
 ]
  

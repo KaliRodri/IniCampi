@@ -103,7 +103,7 @@
         .username {
             font-size: 24px;
             font-weight: bold;
-            margin-top: 100px; /* Adiciona margem para compensar o espaço do avatar */
+            margin-top: 40px; /* Adiciona margem para compensar o espaço do avatar */
             text-align: center;
             color: #333;
         }
@@ -134,10 +134,22 @@
             justify-content: center;
         }
 
+        .project-title {
+            color: #5c6bc0;
+        }
+
+        .project-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+    object-fit: cover; /* Ajuste para a imagem cobrir o contêiner */
+}
+
         .project-card {
             width: 200px;
             height: 300px;
-            background-color: #5c6bc0;
+            background-color: #fff;
             color: white;
             border-radius: 8px;
             padding: 20px;
@@ -148,6 +160,20 @@
             justify-content: space-between;
             text-align: center;
         }
+
+        .project-card h3, p{
+            color: #5c6bc0;
+        }
+
+        .project-body {
+            color: #5c6bc0;
+    width: 100%; /* Define uma largura */
+    white-space: nowrap; /* Impede quebra de linha */
+    overflow: hidden; /* Esconde o excesso de texto */
+    text-overflow: ellipsis; 
+}
+
+        
 
         .view-btn {
             background-color: #1f3c88;
@@ -327,20 +353,35 @@
         </div>
     </div>
 
-        <div class="projects-container">
+    <div class="projects-container">
+        {% for project in profile.joined_projects.all %}
             <div class="project-card">
-                <h3>Nome Projeto</h3>
-                <button class="view-btn">Visualizar</button>
+                <h2 class="project-title">{{ project.title }}</h2>
+                <div class="project-image">
+                    {% if project.image %}
+                        <img src="{{ project.image.url }}" alt="{{ project.title }} Image" class="project-image">
+                    {% else %}
+                        <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão" class="project-image">
+                    {% endif %}
+                </div>
+                <p class="project-body">{{ project.body|truncatewords:20 }}</p>
+                
+                <!-- Botão de desinscrição -->
+                <form action="{% url 'unsubscribe_from_project' project.id %}" method="post" style="margin-top: 10px;">
+                    {% csrf_token %}
+                    <button type="submit" class="view-btn">Desinscrever</button>
+                </form>
             </div>
-            <div class="project-card">
-                <h3>Nome Projeto</h3>
-                <button class="view-btn">Visualizar</button>
-            </div>
-            <div class="project-card">
-                <h3>Nome Projeto</h3>
-                <button class="view-btn">Visualizar</button>
-            </div>
-        </div>
+        {% endfor %}
+        {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+    </div>
+    
        <div class="container2"></div>
         <div class="contacts-container">
             {% for user in users %}
