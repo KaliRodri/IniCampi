@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from feed.models import Profile
@@ -10,7 +10,9 @@ from django.http import HttpResponse
 @login_required
 def profile_view(request):
     profile = request.user.profile
-    return render(request, 'account/profile.html', {'profile': profile})
+    # Obtém todos os usuários do sistema, exceto o próprio usuário logado
+    users = User.objects.exclude(id=request.user.id)
+    return render(request, 'account/profile.html', {'profile': profile, 'users': users})
 
 # Editar o perfil
 @login_required
