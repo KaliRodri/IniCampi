@@ -15,7 +15,7 @@ class Profile(models.Model):
     matricula = models.CharField(max_length=9, validators=[MinLengthValidator(9)], unique=False)
     summary = models.TextField(max_length=500, help_text="Descreva seus conhecimentos aqui")
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
-    profile_background_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    profile_background_image = models.ImageField(upload_to='profile_backgrounds/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} ({self.role})"
