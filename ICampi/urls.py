@@ -14,4 +14,5 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('', ProjectListView.as_view(), name='home'),
     path('profile/', profile_view, name='profile'),  # Ação para a função view
+    path('profile/', include('user_account.urls')), 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
