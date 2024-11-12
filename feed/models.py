@@ -26,7 +26,8 @@ class Project(models.Model):
     calendar = models.DateField(null=True, blank=True)
     author = models.ForeignKey(Profile, limit_choices_to={'role': 'teacher'}, on_delete=models.CASCADE, null=True, blank=True)
     students = models.ManyToManyField(Profile, related_name='joined_projects', limit_choices_to={'role': 'student'}, blank=True)
-    
+    image = models.ImageField(upload_to ='project_images/', null=True, blank=True)
+
     def __str__(self):
         return self.title
 

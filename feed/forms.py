@@ -14,4 +14,4 @@ class CommentForm(forms.ModelForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['title', 'body', 'calendar']  # Exemplo de campos
+        fields = ['title', 'body', 'calendar', 'image']        

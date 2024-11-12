@@ -13,7 +13,7 @@ def add_project(request):
         return redirect('home')  # Redireciona caso o usuário não seja professor
 
     if request.method == 'POST':
-        form = ProjectForm(request.POST)
+        form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
             project = form.save(commit=False)
             project.author = request.user.profile  # Define o autor como o professor logado

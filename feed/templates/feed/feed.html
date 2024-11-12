@@ -82,10 +82,11 @@
         }
 
         .project-image {
-            background-color: #eee; /* Placeholder para imagem */
             width: 100%;
-            height: 180px;
+            height: 200px; 
+            object-fit: cover; /* Garante que a imagem preencha o espaço mantendo a proporção */
             border-radius: 8px;
+            overflow: hidden;
             margin-bottom: 15px;
         }
 
@@ -103,12 +104,12 @@
             margin-bottom: 10px;
         }
 
-        .project-footer {
+        .project-footer-content {
             display: flex;
-            flex-direction: column;  /* Mudando para coluna para organizar autor e alunos */
-            align-items: flex-start;
-            font-size: 14px;
-            color: #666;
+            justify-content: space-between; /* Alinha o autor à esquerda e o botão Excluir à direita */
+            align-items: center;
+            width: 100%;
+            margin-bottom: 10px; /* Ajuste de margem para organização */
         }
 
         .author-info,
@@ -164,8 +165,14 @@
         }
 
         .delete-btn {
-            background-color: #dc3545;
-            padding: 6px 12px;
+        background-color: #dc3545;
+        color: white;
+        padding: 8px 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
         }
 
         .delete-btn:hover {
@@ -246,38 +253,49 @@
         <div class="projects-container">
             {% for project in projects %}
                 <div class="project-card">
-                    <div class="project-image"></div> <!-- Placeholder para imagem -->
-        
+                    <div class="project-image">
+                        {% if project.image %}
+                            <img src="{{ project.image.url }}" alt="{{ project.title }} Image" class="project-image">
+                        {% else %}
+                            <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão" class="project-image">
+                        {% endif %}
+                    </div>
+                    
                     <h2 class="project-title">{{ project.title }}</h2>
                     <p class="project-body">{{ project.body|truncatewords:20 }}</p> <!-- Trunca o texto para caber no layout -->
         
                     <div class="project-footer">
-                        <div class="author-info">
-                            <!-- Exibindo o nome e o avatar do teacher -->
-                            {% if project.author.profile_image %}
-                                <img src="{{ project.author.profile_image.url }}" alt="Foto de perfil de {{ project.author.user.username }}" class="avatar">
-                            {% else %}
-                                <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
+                        <div class="project-footer-content">
+                            <div class="author-info">
+                                {% if project.author.profile_image %}
+                                    <img src="{{ project.author.profile_image.url }}" alt="Foto de perfil de {{ project.author.user.username }}" class="avatar">
+                                {% else %}
+                                    <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
+                                {% endif %}
+                                <h2>{{ project.author.user.username }}</h2>
+                            </div>
+                    
+                            {% if request.user.is_authenticated and request.user.profile.role == 'teacher' %}
+                                <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-btn">Excluir</button>
+                                </form>
                             {% endif %}
-                            <h2>{{ project.author.user.username }}</h2> <!-- Nome do teacher -->
                         </div>
-
-                        <!-- Exibindo os alunos cadastrados -->
-                        <h3>Alunos Cadastrados</h3> <!-- Título de alunos agora embaixo do autor -->
+                    
+                        <h3>Alunos Cadastrados</h3>
                         {% for student in project.students.all %}
                             <div class="student-info">
-                                <!-- Exibindo o nome e o avatar do student -->
                                 {% if student.profile_image %}
                                     <img src="{{ student.profile_image.url }}" alt="Foto de perfil de {{ student.user.username }}" class="avatar">
                                 {% else %}
                                     <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
                                 {% endif %}
-                                <h4>{{ student.user.username }}</h4> <!-- Nome do aluno -->
+                                <h4>{{ student.user.username }}</h4>
                             </div>
                         {% empty %}
                             <p>Nenhum aluno cadastrado.</p>
                         {% endfor %}
-
                     </div>
         
                     <!-- Botão de ingressar agora está aqui, antes da seção de comentários -->
