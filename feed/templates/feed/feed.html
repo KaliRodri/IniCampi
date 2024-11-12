@@ -184,10 +184,10 @@
                             </div>
                         </div>
                         
-                        {% if project.author == request.user.profile or request.user.is_staff %}
+                        {% if request.user.is_authenticated and request.user.profile.role == 'teacher' %}
                             <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
                                 {% csrf_token %}
-                                <button type="submit" style="background-color: transparent; border: none; color: #007bff;">Excluir</button>
+                                <button type="submit">Excluir</button>
                             </form>
                         {% endif %}
                     </div>
