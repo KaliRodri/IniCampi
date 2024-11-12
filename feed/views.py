@@ -13,9 +13,11 @@ def add_project(request):
         return redirect('home')  # Redireciona caso o usuário não seja professor
 
     if request.method == 'POST':
-        form = ProjectForm(request.POST)
+        form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            project = form.save(commit=False)
+            project.author = request.user.profile  # Define o autor como o professor logado
+            project.save()
             return redirect('home')
     else:
         form = ProjectForm()
@@ -58,3 +60,19 @@ def delete_project(request, project_id):
         project.delete()
     
     return redirect('home')  # Redireciona após a exclusão
+
+# Função para que alunos se inscrevam nos projetos
+@login_required
+def join_project(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    
+    # Verifica se o usuário é um aluno
+    if request.user.profile.role != 'student':
+        return redirect('home')  # Redireciona caso o usuário não seja aluno
+    # Verifica se o aluno já está inscrito no projeto
+    if request.user.profile in project.students.all():
+        return redirect('home')  # Caso já tenha ingressado, redireciona de volta
+    # Adiciona o aluno ao projeto
+    student_profile = request.user.profile
+    project.students.add(student_profile)  # Adiciona o aluno ao campo 'students' do projeto
+    return redirect('home')  # Redireciona para a página inicial ou para os detalhes do projeto, se necessário

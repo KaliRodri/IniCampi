@@ -13,4 +13,5 @@ urlpatterns = [
     path('feed/<int:project_id>/add_comment/', views.add_comment, name='add_comment'),
     path('profile/', profile_view, name='profile'),  # Ação para a função view
     path('project/', views.add_project, name='add_project'),
+    path('projects/join/<int:project_id>/', views.join_project, name='join_project'),
 ]

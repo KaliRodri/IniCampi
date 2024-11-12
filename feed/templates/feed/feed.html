@@ -62,10 +62,11 @@
         }
 
         .projects-container {
-            display: flex;
+            display: grid;  /* Mudando para grid */
+            grid-template-columns: repeat(3, 1fr);  /* Isso cria 3 colunas com largura proporcional */
             gap: 20px;
-            flex-wrap: wrap;
-            justify-content: space-between;
+            justify-items: center;
+            margin-bottom: 20px;
         }
 
         .project-card {
@@ -74,17 +75,18 @@
             border-radius: 10px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 350px;
-            flex: 1;
+            width: 100%;  /* Garante que o projeto ocupe 100% da largura da célula da grid */
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
         .project-image {
-            background-color: #eee; /* Placeholder para imagem */
             width: 100%;
-            height: 180px;
+            height: 200px; 
+            object-fit: cover; /* Garante que a imagem preencha o espaço mantendo a proporção */
             border-radius: 8px;
+            overflow: hidden;
             margin-bottom: 15px;
         }
 
@@ -102,21 +104,23 @@
             margin-bottom: 10px;
         }
 
-        .project-footer {
+        .project-footer-content {
             display: flex;
+            justify-content: space-between; /* Alinha o autor à esquerda e o botão Excluir à direita */
             align-items: center;
-            justify-content: space-between;
-            font-size: 14px;
-            color: #666;
+            width: 100%;
+            margin-bottom: 10px; /* Ajuste de margem para organização */
         }
 
-        .author-info {
+        .author-info,
+        .student-info {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .author-info img {
+        .author-info img,
+        .student-info img {
             width: 30px;
             height: 30px;
             border-radius: 50%;
@@ -140,6 +144,85 @@
         .add-project-btn:hover {
             background-color: #218838;
         }
+
+        /* Estilos para os botões de Logout, Excluir e Comentar */
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .logout-form button {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .logout-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .delete-btn {
+        background-color: #dc3545;
+        color: white;
+        padding: 8px 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .comment-form button {
+            width: fit-content;
+            padding: 10px 20px;
+            background-color: #28a745;
+            border-radius: 5px;
+        }
+
+        .comment-form button:hover {
+            background-color: #218838;
+        }
+
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+        }
+
+        .comment-form textarea {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .comment-form button {
+            width: fit-content;
+            padding: 10px 20px;
+            background-color: #28a745;
+            border-radius: 5px;
+        }
+
+        /* Ajustes para aproximar os alunos do título "Alunos Cadastrados" */
+        .project-footer h3 {
+            margin-bottom: 5px; /* Menos espaço abaixo do título */
+        }
+
+        .student-info {
+            margin-top: 0; /* Remover o espaço superior */
+            margin-bottom: 5px; /* Menos espaço abaixo dos alunos */
+        }
+
     </style>
 </head>
 <body>
@@ -170,27 +253,58 @@
         <div class="projects-container">
             {% for project in projects %}
                 <div class="project-card">
-                    <div class="project-image"></div> <!-- Placeholder para imagem -->
-
-                    <h2 class="project-title">{{ project.title }}</h2>
-                    <p class="project-body">{{ project.body|truncatewords:20 }}</p> <!-- Trunca o texto para caber no layout -->
-
-                    <div class="project-footer">
-                        <div class="author-info">
-                            <img src="https://via.placeholder.com/30" alt="Avatar">
-                            <div>
-                                <p>{{ project.user.username }}</p>
-                                <small>{{ project.calendar }}</small>
-                            </div>
-                        </div>
-                        
-                        {% if request.user.is_authenticated and request.user.profile.role == 'teacher' %}
-                            <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit">Excluir</button>
-                            </form>
+                    <div class="project-image">
+                        {% if project.image %}
+                            <img src="{{ project.image.url }}" alt="{{ project.title }} Image" class="project-image">
+                        {% else %}
+                            <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão" class="project-image">
                         {% endif %}
                     </div>
+                    
+                    <h2 class="project-title">{{ project.title }}</h2>
+                    <p class="project-body">{{ project.body|truncatewords:20 }}</p> <!-- Trunca o texto para caber no layout -->
+        
+                    <div class="project-footer">
+                        <div class="project-footer-content">
+                            <div class="author-info">
+                                {% if project.author.profile_image %}
+                                    <img src="{{ project.author.profile_image.url }}" alt="Foto de perfil de {{ project.author.user.username }}" class="avatar">
+                                {% else %}
+                                    <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
+                                {% endif %}
+                                <h2>{{ project.author.user.username }}</h2>
+                            </div>
+                    
+                            {% if request.user.is_authenticated and request.user.profile.role == 'teacher' %}
+                                <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-btn">Excluir</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    
+                        <h3>Alunos Cadastrados</h3>
+                        {% for student in project.students.all %}
+                            <div class="student-info">
+                                {% if student.profile_image %}
+                                    <img src="{{ student.profile_image.url }}" alt="Foto de perfil de {{ student.user.username }}" class="avatar">
+                                {% else %}
+                                    <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
+                                {% endif %}
+                                <h4>{{ student.user.username }}</h4>
+                            </div>
+                        {% empty %}
+                            <p>Nenhum aluno cadastrado.</p>
+                        {% endfor %}
+                    </div>
+        
+                    <!-- Botão de ingressar agora está aqui, antes da seção de comentários -->
+                    {% if request.user.is_authenticated and request.user.profile.role == 'student' %}
+                        <form action="{% url 'join_project' project.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="add-project-btn">Ingressar no Projeto</button>
+                        </form>
+                    {% endif %}
 
                     <!-- Comentários e formulário -->
                     <div class="comment-section">
@@ -204,7 +318,7 @@
                             <p>Nenhum comentário ainda.</p>
                         {% endfor %}
                     </div>
-
+        
                     <form class="comment-form" action="{% url 'add_comment' project.id %}" method="post">
                         {% csrf_token %}
                         {{ comment_form.body }}
