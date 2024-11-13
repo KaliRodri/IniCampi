@@ -71,11 +71,11 @@ def profile(request, username):
 @login_required
 def edit_summary(request):
     if request.method == 'POST':
-        summary = request.POST.get('summary')
-        request.user.profile.summary = summary
-        request.user.profile.save()
-        return redirect('profile')
-    return redirect('profile')
+        profile = Profile.objects.get(user=request.user)
+        profile.summary = request.POST.get('summary')
+        profile.save()
+        return redirect('profile')  # Substitua 'profile' pela URL ou nome da view de redirecionamento
+    return render(request, 'profile.html')
 
 @login_required
 def unsubscribe_from_project(request, project_id):
