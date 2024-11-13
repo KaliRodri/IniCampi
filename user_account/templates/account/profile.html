@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de {{ profile.user.username }}</title>
-    <a href="{% url 'home' %}"></a>
     <style>
         /* Estilos Gerais */
         * {
@@ -21,37 +20,39 @@
 
         /* Cabeçalho */
         header {
-            background-color: #5c6bc0;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
+    background-color: #5c6bc0;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin-right: 25px;
-        }
+nav {
+    display: flex;
+    align-items: center;
+}
 
-        nav a:hover {
-            text-decoration: underline;
-        }
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-right: 25px;
+}
 
-        header .logout {
-            background-color: #1f3c88;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
+nav a:hover {
+    text-decoration: underline;
+}
+
+.logout button {
+    background-color: #1f3c88;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 20px;  /* Adiciona espaçamento entre o botão e os links */
+}
 
         /* Imagem do cabeçalho */
         
@@ -301,9 +302,11 @@
         <div class="logo">ICampi</div>
         <nav>
             <a href="/">Home</a>
-            <a href="/feed">Feed</a>
             <a href="/profile">Perfil</a>
-            <button class="logout">Logout</button>
+            <form class="logout" action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
         </nav>
     </header>
 
@@ -373,13 +376,6 @@
                 </form>
             </div>
         {% endfor %}
-        {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-            <div class="message {{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    </div>
-{% endif %}
     </div>
     
        <div class="container2"></div>
