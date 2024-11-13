@@ -350,7 +350,7 @@ nav a:hover {
                 {% csrf_token %}
                 <textarea name="summary" rows="4" cols="30" placeholder="Escreva um resumo sobre você..." 
                           style="resize: none;" 
-                          onclick="showSaveButton()">{{ profile.user.summary }}</textarea>
+                          onclick="showSaveButton()">{{ profile.summary }}</textarea>
                 <button type="submit" class="follow-btn" id="save-button" onclick="hideSaveButton()">Salvar</button>
             </form>
         </div>
