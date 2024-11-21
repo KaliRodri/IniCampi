@@ -6,6 +6,7 @@ from django.views import generic
 from .models import Project, Comment
 from .forms import CommentForm
 from .forms import ProjectForm
+from django.http import Http404
 
 @login_required
 def add_project(request):
@@ -76,3 +77,21 @@ def join_project(request, project_id):
     student_profile = request.user.profile
     project.students.add(student_profile)  # Adiciona o aluno ao campo 'students' do projeto
     return redirect('home')  # Redireciona para a página inicial ou para os detalhes do projeto, se necessário
+
+def edit_project(request, project_id):
+    # Carrega o projeto a ser editado
+    project = get_object_or_404(Project, id=project_id)
+
+    # Verifica se o usuário é o autor (professor) do projeto
+    if project.author.user != request.user:
+        raise Http404("Você não tem permissão para editar este projeto.")
+
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, request.FILES, instance=project)
+        if form.is_valid():
+            form.save()
+            return redirect('home')  # Redireciona para a página de detalhes do projeto após salvar
+    else:
+        form = ProjectForm(instance=project)
+
+    return render(request, 'edit_project.html', {'form': form, 'project': project})
