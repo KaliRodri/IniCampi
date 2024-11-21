@@ -1,1 +1,48 @@
-/* Joga aqui o css do header, e que vai ser chamado para todas as paginas, e aí vai criando arquivos para cada pagina, ex: feed.css
+header {
+    background-color: #5c6bc0;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+nav {
+    display: flex;
+    align-items: center; /* Centraliza verticalmente */
+    gap: 15px; /* Espaçamento entre os itens */
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0; /* Remove a margem para alinhamento */
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.logout-form {
+    display: inline; /* Mantém o formulário em linha */
+}
+
+.logout-form button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-form button:hover {
+    background-color: #0056b3;
+}
