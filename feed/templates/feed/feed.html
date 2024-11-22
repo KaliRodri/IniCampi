@@ -50,6 +50,11 @@
                     <div class="project-footer">
                         <div class="project-footer-content">
                             <div class="author-info">
+                                {% if request.user.is_authenticated and request.user.profile.role == 'teacher' and project.author.user == request.user %}
+    <a href="{% url 'edit_project' project.id %}">
+        <button class="edit-project-btn">✎</button>
+    </a>
+{% endif %}
                                 {% if project.author.profile_image %}
                                     <img src="{{ project.author.profile_image.url }}" alt="Foto de perfil de {{ project.author.user.username }}" class="avatar">
                                 {% else %}

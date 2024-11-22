@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Projeto</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/feed.css' %}">
+</head>
+<body>
+    <header>
+        <h1>ICampi</h1>
+        <nav>
+            <a href=" ">Home</a>
+            <a href="{% url 'profile' %}">Profile</a>
+            <form class="logout-form" action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="section-header">
+            <h2 class="section-title">Editar Projeto: {{ project.title }}</h2>
+            <p class="section-subtitle">Faça as alterações desejadas e salve.</p>
+        </div>
+
+        <div class="form-container">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}  <!-- Exibe o formulário com seus campos -->
+
+                <button type="submit" class="submit-btn">Salvar Alterações</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

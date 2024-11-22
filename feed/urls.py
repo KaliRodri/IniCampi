@@ -7,6 +7,7 @@ from user_account.views import profile_view
 
 urlpatterns = [
     path('delete/<int:project_id>/', delete_project, name='delete_project'),
+    path('edit_project/<int:project_id>/', views.edit_project, name='edit_project'),
     path('accounts/', include('allauth.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
