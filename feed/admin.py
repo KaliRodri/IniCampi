@@ -14,6 +14,6 @@ class CommentInLine(admin.TabularInline):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'role', 'matricula', 'summary')
+    list_display = ('user', 'role', 'matricula', 'summary', 'hard_skills')
     inlines = [ProjectInLine, CommentInLine]
     list_filter = ('role',)    

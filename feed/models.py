@@ -16,7 +16,8 @@ class Profile(models.Model):
     summary = models.TextField(max_length=500, help_text="Descreva seus conhecimentos aqui")
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     profile_background_image = models.ImageField(upload_to='profile_backgrounds/', null=True, blank=True)
-
+    hard_skills = models.CharField(max_length=200, blank=True, null=True, help_text="Liste suas hard skills separadas por vírgula")
+    
     def __str__(self):
         return f"{self.user.username} ({self.role})"
 
