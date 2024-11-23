@@ -7,6 +7,7 @@ from .models import Project, Comment
 from .forms import CommentForm
 from .forms import ProjectForm
 from django.http import Http404
+from django.db.models import Q
 
 @login_required
 def add_project(request):
@@ -32,9 +33,22 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'projects'
     login_url = '/accounts/login/'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q')  # Captura o parâmetro de pesquisa na URL
+        if query:
+            # Filtra projetos com base no título, corpo ou autor
+            queryset = queryset.filter(
+                Q(title__icontains=query) |
+                Q(body__icontains=query) |
+                Q(author__user__username__icontains=query)
+            ).distinct()
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comment_form'] = CommentForm()  # Inclui o formulário de comentário no contexto
+        context['query'] = self.request.GET.get('q', '')  # Inclui a query no contexto para o formulário de pesquisa
         return context
 
 # Função para adicionar comentários diretamente no feed

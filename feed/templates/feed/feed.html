@@ -12,6 +12,13 @@
     <header>
         <h1>ICampi</h1>
         <nav>
+            <form method="get" action="." style="display: flex; align-items: center;">
+                <input type="text" name="q" value="{{ query }}" placeholder="Pesquisar projetos">
+                <button type="submit" style="background: none; border: none; cursor: pointer;">
+                    🔍
+                </button>
+            </form>
+            <a href="{% url 'home' %}" class="clear-search-btn">Limpar Pesquisa</a>
             <a href=" ">Home</a>
             <a href="{% url 'profile' %}">Profile</a>
             <form class="logout-form" action="{% url 'logout' %}" method="post">
@@ -46,7 +53,11 @@
                     
                     <h2 class="project-title">{{ project.title }}</h2>
                     <p class="project-body">{{ project.body|truncatewords:20 }}</p> <!-- Trunca o texto para caber no layout -->
-        
+                    {% if project.pdf_file %}
+            <a href="{{ project.pdf_file.url }}" target="_blank" download>
+                <button type="button">Baixar Ementa</button>
+            </a>
+        {% endif %}
                     <div class="project-footer">
                         <div class="project-footer-content">
                             <div class="author-info">
