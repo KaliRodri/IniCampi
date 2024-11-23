@@ -16,7 +16,7 @@ from feed.models import Project
 @login_required
 def profile_view(request):
     profile = request.user.profile
-    # Obtém todos os usuários do sistema, exceto o próprio usuário logado
+   
     users = User.objects.exclude(id=request.user.id)
     return render(request, 'account/profile.html', {'profile': profile, 'users': users})
 
@@ -35,37 +35,47 @@ def edit_profile(request):
 
 @login_required
 def edit_avatar(request):
-    profile = request.user.profile  # Obtém o perfil do usuário logado
+    profile = request.user.profile 
     if request.method == 'POST':
         # Verifica se há um arquivo de imagem enviado
         if 'profile_image' in request.FILES:
             profile.profile_image = request.FILES['profile_image']
-            profile.save()  # Salva a nova imagem no perfil
-            return redirect('profile')  # Redireciona para a página de perfil
-    return redirect('profile')  # Caso não tenha enviado nada, apenas redireciona
+            profile.save()  
+            return redirect('profile')  
+    return redirect('profile')  
 
 @login_required
 def edit_background(request):
-    profile = request.user.profile  # Obtém o perfil do usuário logado
+    profile = request.user.profile  
     if request.method == 'POST':
         # Verifica se há um arquivo de imagem enviado
         if 'profile_background_image' in request.FILES:
             profile.profile_background_image = request.FILES['profile_background_image']
-            profile.save()  # Salva a nova imagem no perfil
-            return redirect('profile_view')  # Redireciona para a página de perfil
+            profile.save()  
+            return redirect('profile_view')  
         else:
             return HttpResponse("Nenhuma imagem foi enviada", status=400)
-    return redirect('profile_view')  # Caso não tenha enviado nada, apenas redireciona
+    return redirect('profile_view')  
 
 @login_required
 def profile(request, username):
     profile = Profile.objects.get(user__username=username)
     
-    if request.method == 'POST' and 'summary' in request.POST:
-        profile.user.summary = request.POST['summary']
-        profile.user.save()
+    if request.method == 'POST':
+        # Atualiza o resumo, se enviado
+        if 'summary' in request.POST:
+            profile.user.summary = request.POST['summary']
+            profile.user.save()
+
+        # Atualiza as hard skills, se enviadas
+        if 'hard_skills' in request.POST:
+            selected_skill = request.POST.get('hard_skills')
+            if selected_skill in dict(Profile.HARD_SKILL_CHOICES).keys():
+                profile.hard_skills = selected_skill
+                profile.save()
+        
         return redirect('profile', username=username)
-    
+
     return render(request, 'profile.html', {'profile': profile})
 
 @login_required
@@ -74,7 +84,7 @@ def edit_summary(request):
         profile = Profile.objects.get(user=request.user)
         profile.summary = request.POST.get('summary')
         profile.save()
-        return redirect('profile')  # Substitua 'profile' pela URL ou nome da view de redirecionamento
+        return redirect('profile')  
     return render(request, 'profile.html')
 
 @login_required
@@ -86,3 +96,13 @@ def unsubscribe_from_project(request, project_id):
         project.students.remove(profile)
     
     return redirect(reverse('profile_view'))
+
+@login_required
+def edit_hard_skills(request):
+    if request.method == 'POST':
+        hard_skills = request.POST.get('hard_skills')
+        profile = request.user.profile  
+        profile.hard_skills = hard_skills
+        profile.save()
+        return redirect('profile')  
+    return render(request, 'edit_hard_skills.html')  
