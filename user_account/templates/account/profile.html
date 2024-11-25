@@ -66,18 +66,17 @@
                 <button type="submit" class="follow-btn" id="save-button" onclick="hideSaveButton()">Salvar</button>
             </form>
             <!-- Dropdown de Hard Skills -->
-            <form action="{% url 'edit_hard_skills' %}" method="POST" id="edit-hard-skills-form">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <label for="hard-skills-select">Escolha suas Hard Skills:</label>
-                <select name="hard_skills" id="hard-skills-select" onchange="showSaveButtonHardSkills()">
-                    <option value="">Selecione</option>
-                    <option value="Python" {% if profile.hard_skills == "Python" %}selected{% endif %}>Python</option>
-                    <option value="JavaScript" {% if profile.hard_skills == "JavaScript" %}selected{% endif %}>JavaScript</option>
-                    <option value="React" {% if profile.hard_skills == "React" %}selected{% endif %}>React</option>
-                    <option value="Django" {% if profile.hard_skills == "Django" %}selected{% endif %}>Django</option>
-                    <option value="Flutter" {% if profile.hard_skills == "Flutter" %}selected{% endif %}>Flutter</option>
+                <label for="hard_skills">Selecione suas Hard Skills:</label>
+                <select name="hard_skills" id="hard_skills" multiple>
+                    {% for skill in skills %}
+                        <option value="{{ skill.id }}" {% if skill in profile.hard_skills.all %}selected{% endif %}>
+                            {{ skill.name }}
+                        </option>
+                    {% endfor %}
                 </select>
-                <button type="submit" class="follow-btn" id="save-button-hard-skills" onclick="hideSaveButtonHardSkills()">Salvar</button>
+                <button type="submit">Salvar</button>
             </form>
         </div>
     </div>
