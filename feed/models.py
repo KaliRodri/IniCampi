@@ -11,7 +11,7 @@ class Profile(models.Model):
         ('teacher', 'Teacher'),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=7, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=7, choices=ROLE_CHOICES, default='student')
     matricula = models.CharField(max_length=9, validators=[MinLengthValidator(9)], unique=False)
     summary = models.TextField(max_length=500, help_text="Descreva seus conhecimentos aqui")
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
@@ -27,7 +27,8 @@ class Project(models.Model):
     calendar = models.DateField(null=True, blank=True)
     author = models.ForeignKey(Profile, limit_choices_to={'role': 'teacher'}, on_delete=models.CASCADE, null=True, blank=True)
     students = models.ManyToManyField(Profile, related_name='joined_projects', limit_choices_to={'role': 'student'}, blank=True)
-    image = models.ImageField(upload_to ='project_images/', null=True, blank=True)
+    image = models.ImageField(upload_to='project_images/', null=True, blank=True)
+    pdf_file = models.FileField(upload_to='project_pdfs/', null=True, blank=True)  # Campo para o PDF
 
     def __str__(self):
         return self.title

@@ -12,8 +12,7 @@
     <header>
         <div class="logo">ICampi</div>
         <nav>
-            <a href="/">Home</a>
-            <a href="/profile">Perfil</a>
+            <a href="{% url 'home' %}">Home</a>
             <form class="logout-form" action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
                 <button type="submit">Logout</button>
