@@ -7,9 +7,7 @@ from .forms import ProfileForm
 from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib import messages
-from feed.models import Project
-
-
+from feed.models import Project, Skill
 
 
 # Exibir o perfil
@@ -24,6 +22,7 @@ def profile_view(request):
 @login_required
 def edit_profile(request):
     profile = request.user.profile
+    skills = Skill.objects.all()
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
@@ -31,7 +30,7 @@ def edit_profile(request):
             return redirect('profile_view')
     else:
         form = ProfileForm(instance=profile)
-    return render(request, 'account/edit_profile.html', {'form': form})
+    return render(request, 'account/edit_profile.html', {'form': form, 'skills': skills, 'profile': profile})
 
 @login_required
 def edit_avatar(request):
@@ -99,10 +98,16 @@ def unsubscribe_from_project(request, project_id):
 
 @login_required
 def edit_hard_skills(request):
-    if request.method == 'POST':
-        hard_skills = request.POST.get('hard_skills')
-        profile = request.user.profile  
-        profile.hard_skills = hard_skills
-        profile.save()
-        return redirect('profile')  
-    return render(request, 'edit_hard_skills.html')  
+    profile = get_object_or_404(Profile, user=request.user)
+    if request.method == "POST":
+        hard_skills_ids = request.POST.getlist('hard_skills')  # IDs das habilidades selecionadas
+        if hard_skills_ids:
+            hard_skills = Skill.objects.filter(id__in=hard_skills_ids)  # Filtra as skills válidas
+            profile.hard_skills.set(hard_skills)  # Atualiza no perfil
+            messages.success(request, "Hard skills atualizadas com sucesso!")
+        else:
+            profile.hard_skills.clear()  # Limpa se nada foi selecionado
+            messages.info(request, "Nenhuma hard skill selecionada. Lista limpa.")
+        return redirect('profile_view')
+
+    return redirect('profile_view')

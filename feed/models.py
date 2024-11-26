@@ -5,6 +5,13 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+class Skill(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+    
+
 class Profile(models.Model):
     ROLE_CHOICES = (
         ('student', 'Student'),
@@ -16,7 +23,7 @@ class Profile(models.Model):
     summary = models.TextField(max_length=500, help_text="Descreva seus conhecimentos aqui")
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     profile_background_image = models.ImageField(upload_to='profile_backgrounds/', null=True, blank=True)
-    hard_skills = models.CharField(max_length=200, blank=True, null=True, help_text="Liste suas hard skills separadas por vírgula")
+    hard_skills = models.ManyToManyField(Skill, blank=True)
     
     def __str__(self):
         return f"{self.user.username} ({self.role})"
