@@ -11,6 +11,6 @@ class ProfileForm(forms.ModelForm):
         models = Profile
         fields = ['user.username', 'summary', 'profile_image', 'profile_background_image', 'hard_skills']
         widgets = {
-            'hard_skills': forms.CheckboxSelectMultiple,  # Renderiza como checkboxes
+            'hard_skills': forms.CheckboxSelectMultiple,  
         }
         

@@ -19,102 +19,137 @@
             </form>
         </nav>
     </header>
-</body>
 
-
-    <!-- Imagem abaixo do cabeçalho -->
-   
-<div class="header-image">
-    {% if profile.profile_background_image %}
-        <img src="{{ profile.profile_background_image.url }}" alt="Foto de fundo">
-    {% else %}
-        <img src="/static/images/Imagem_Fundo_Perfil.jpeg" alt="Foto de fundo padrão">
-    {% endif %}
-    
-    <!-- Ícone de edição para a foto de fundo -->
-    <form action="{% url 'edit_background' %}" method="POST" enctype="multipart/form-data" id="edit-background-form">
-        {% csrf_token %}
-        <input type="file" name="profile_background_image" accept="image/*" id="file-upload-background">
-        <label for="file-upload-background" class="edit-icon-background">✎</label>
-    </form>
-</div>
-
-<div class="container">
-    <div class="profile-wrapper">
-        <!-- Foto de Perfil -->
-        {% if profile.profile_image %}
-            <img src="{{ profile.profile_image.url }}" alt="Foto de perfil" class="avatar">
+    <!-- Imagem de fundo -->
+    <div class="header-image">
+        {% if profile.profile_background_image %}
+            <img src="{{ profile.profile_background_image.url }}" alt="Foto de fundo">
         {% else %}
-            <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
+            <img src="/static/images/Imagem_Fundo_Perfil.jpeg" alt="Foto de fundo padrão">
         {% endif %}
         
-        <!-- Ícone de edição para a foto de perfil -->
-        <form action="{% url 'edit_avatar' %}" method="POST" enctype="multipart/form-data" id="edit-avatar-form">
+        <!-- Ícone de edição para a foto de fundo -->
+        <form action="{% url 'edit_background' %}" method="POST" enctype="multipart/form-data" id="edit-background-form">
             {% csrf_token %}
-            <input type="file" name="profile_image" accept="image/*" id="file-upload-avatar">
-            <label for="file-upload-avatar" class="edit-icon-avatar">✎</label>
+            <input type="file" name="profile_background_image" accept="image/*" id="file-upload-background">
+            <label for="file-upload-background" class="edit-icon-background">✎</label>
         </form>
-        
-        <!-- Conteúdo do Perfil -->
-        <div class="profile-container">
-            <h2 class="username">{{ profile.user.username }}</h2>
-            <form action="{% url 'edit_summary' %}" method="POST" id="edit-summary-form">
-                {% csrf_token %}
-                <textarea name="summary" rows="4" cols="30" placeholder="Escreva um resumo sobre você..." 
-                          style="resize: none;" 
-                          onclick="showSaveButton()">{{ profile.summary }}</textarea>
-                <button type="submit" class="follow-btn" id="save-button" onclick="hideSaveButton()">Salvar</button>
-            </form>
-            <!-- Dropdown de Hard Skills -->
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <label for="hard_skills">Selecione suas Hard Skills:</label>
-                <select name="hard_skills" id="hard_skills" multiple>
-                    {% for skill in skills %}
-                        <option value="{{ skill.id }}" {% if skill in profile.hard_skills.all %}selected{% endif %}>
-                            {{ skill.name }}
-                        </option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Salvar</button>
-            </form>
-        </div>
     </div>
 
-    <div class="projects-container">
-        {% for project in profile.joined_projects.all %}
-            <div class="project-card">
-                <h2 class="project-title">{{ project.title }}</h2>
-                <div class="project-image">
-                    {% if project.image %}
-                        <img src="{{ project.image.url }}" alt="{{ project.title }} Image" class="project-image">
-                    {% else %}
-                        <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão" class="project-image">
-                    {% endif %}
-                </div>
-                <p class="project-body">{{ project.body|truncatewords:20 }}</p>
+    <!-- Container do Perfil -->
+    <div class="container">
+        <div class="profile-wrapper">
+            <!-- Foto de Perfil -->
+            <div class="profile-avatar">
+                {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" alt="Foto de perfil" class="avatar">
+                {% else %}
+                    <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
+                {% endif %}
                 
-                <!-- Botão de desinscrição -->
-                <form action="{% url 'unsubscribe_from_project' project.id %}" method="post" style="margin-top: 10px;">
+                <!-- Ícone de edição para a foto de perfil -->
+                <form action="{% url 'edit_avatar' %}" method="POST" enctype="multipart/form-data" id="edit-avatar-form">
                     {% csrf_token %}
-                    <button type="submit" class="view-btn">Desinscrever</button>
+                    <input type="file" name="profile_image" accept="image/*" id="file-upload-avatar">
+                    <label for="file-upload-avatar" class="edit-icon-avatar">✎</label>
                 </form>
             </div>
-        {% endfor %}
-    </div>
-    
-       <div class="container2"></div>
+
+            <!-- Conteúdo do Perfil -->
+            <div class="profile-container">
+                <h2 class="username">{{ profile.user.username }}</h2>
+                <form action="{% url 'edit_summary' %}" method="POST" id="edit-summary-form">
+                    {% csrf_token %}
+                    <textarea name="summary" rows="4" cols="30" placeholder="Escreva um resumo sobre você..." 
+                              style="resize: none;" 
+                              onclick="showSaveButton()">{{ profile.summary }}</textarea>
+                    <button type="submit" class="follow-btn" id="save-button" onclick="hideSaveButton()">Salvar</button>
+                </form>
+
+                <!-- Dropdown de Hard Skills -->
+                <form method="post" enctype="multipart/form-data" class="hard-skills-form">
+                    {% csrf_token %}
+                    <label for="hard_skills">Selecione suas Hard Skills:</label>
+                    <select name="hard_skills" id="hard_skills" multiple>
+                        {% for skill in skills %}
+                            <option value="{{ skill.id }}" {% if skill in profile.hard_skills.all %}selected{% endif %}>
+                                {{ skill.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="save-btn">Salvar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Projetos do Estudante -->
+        {% if profile.role == 'student' %}
+            <div class="projects-container">
+                <h1>Meus Projetos</h1>
+                {% for project in student_projects %}
+                    <div class="project-card">
+                        <h2 class="project-title">{{ project.title }}</h2>
+                        <div class="project-image">
+                            {% if project.image %}
+                                <img src="{{ project.image.url }}" alt="{{ project.title }} Image">
+                            {% else %}
+                                <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão">
+                            {% endif %}
+                        </div>
+                        <p class="project-body">{{ project.body|truncatewords:20 }}</p>
+                        <form action="{% url 'unsubscribe_from_project' project.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="view-btn">Desinscrever</button>
+                        </form>
+                    </div>
+                {% empty %}
+                    <p>Você não está cadastrado em nenhum projeto.</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Projetos do Professor -->
+        {% if profile.role == 'teacher' %}
+            <div class="projects-container">
+                <h1>Projetos Criados</h1>
+                {% for project in teacher_projects %}
+                    <div class="project-card">
+                        <h2 class="project-title">{{ project.title }}</h2>
+                        <p class="project-body">{{ project.body|truncatewords:20 }}</p>
+
+                        <h3>Alunos Cadastrados:</h3>
+                        <ul>
+                            {% for student in project.students.all %}
+                                <li>
+                                    <div class="student-info">
+                                        {% if student.profile_image %}
+                                            <img src="{{ student.profile_image.url }}" alt="Foto de perfil de {{ student.user.username }}" class="avatar">
+                                        {% else %}
+                                            <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
+                                        {% endif %}
+                                        <span>{{ student.user.username }}</span>
+                                    </div>
+                                </li>
+                            {% empty %}
+                                <li>Nenhum aluno cadastrado.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% empty %}
+                    <p>Você ainda não criou nenhum projeto.</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Lista de Contatos -->
         <div class="contacts-container">
             {% for user in users %}
                 <div class="contact">
-                    <!-- Foto de Perfil -->
                     {% if user.profile.profile_image %}
                         <img src="{{ user.profile.profile_image.url }}" alt="Foto de {{ user.username }}" class="contact-avatar">
                     {% else %}
                         <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de {{ user.username }}" class="contact-avatar">
                     {% endif %}
-                    
-                    <!-- Nome do Usuário -->
                     <span>{{ user.username }}</span>
                 </div>
                 <hr>
@@ -123,33 +158,29 @@
     </div>
 
     <script>
-        // Detecta a seleção de arquivo para o formulário de foto de fundo
         document.getElementById('file-upload-background').addEventListener('change', function() {
             var form = document.getElementById('edit-background-form');
             if (this.files.length > 0) {
-                form.submit();  // Envia o formulário
+                form.submit();  
             }
         });
 
-        // Detecta a seleção de arquivo para o formulário de foto de perfil
         document.getElementById('file-upload-avatar').addEventListener('change', function() {
             var form = document.getElementById('edit-avatar-form');
             if (this.files.length > 0) {
-                form.submit();  // Envia o formulário
+                form.submit();  
             }
         });
 
-         function showSaveButton() {
-        document.getElementById('save-button').style.display = 'block';
-    }
+        function showSaveButton() {
+            document.getElementById('save-button').style.display = 'block';
+        }
 
-    // Oculta o botão de salvar após o clique
-    function hideSaveButton() {
+        function hideSaveButton() {
+            document.getElementById('save-button').style.display = 'none';
+        }
+
         document.getElementById('save-button').style.display = 'none';
-    }
-
-    // Garante que o botão de salvar esteja visível ao carregar a página
-    document.getElementById('save-button').style.display = 'none';
     </script>
 </body>
 </html>

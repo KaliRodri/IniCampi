@@ -10,15 +10,24 @@ from django.contrib import messages
 from feed.models import Project, Skill
 
 
-# Exibir o perfil
+
 @login_required
 def profile_view(request):
     profile = request.user.profile
-   
-    users = User.objects.exclude(id=request.user.id)
-    return render(request, 'account/profile.html', {'profile': profile, 'users': users})
+    
+    if profile.role == 'student':
+        student_projects = profile.joined_projects.all()  
+        teacher_projects = None 
 
-# Editar o perfil
+    
+    elif profile.role == 'teacher':
+        student_projects = None  
+        teacher_projects = Project.objects.filter(author=profile)  
+    users = User.objects.exclude(id=request.user.id)
+    return render(request, 'account/profile.html', {'profile': profile,'student_projects': student_projects,
+        'teacher_projects': teacher_projects, 'users': users})
+
+
 @login_required
 def edit_profile(request):
     profile = request.user.profile
@@ -36,7 +45,7 @@ def edit_profile(request):
 def edit_avatar(request):
     profile = request.user.profile 
     if request.method == 'POST':
-        # Verifica se há um arquivo de imagem enviado
+        
         if 'profile_image' in request.FILES:
             profile.profile_image = request.FILES['profile_image']
             profile.save()  
@@ -47,7 +56,7 @@ def edit_avatar(request):
 def edit_background(request):
     profile = request.user.profile  
     if request.method == 'POST':
-        # Verifica se há um arquivo de imagem enviado
+        
         if 'profile_background_image' in request.FILES:
             profile.profile_background_image = request.FILES['profile_background_image']
             profile.save()  
@@ -61,12 +70,12 @@ def profile(request, username):
     profile = Profile.objects.get(user__username=username)
     
     if request.method == 'POST':
-        # Atualiza o resumo, se enviado
+        
         if 'summary' in request.POST:
             profile.user.summary = request.POST['summary']
             profile.user.save()
 
-        # Atualiza as hard skills, se enviadas
+       
         if 'hard_skills' in request.POST:
             selected_skill = request.POST.get('hard_skills')
             if selected_skill in dict(Profile.HARD_SKILL_CHOICES).keys():
@@ -97,16 +106,42 @@ def unsubscribe_from_project(request, project_id):
     return redirect(reverse('profile_view'))
 
 @login_required
+def student_projects_view(request):
+    profile = request.user.profile
+    if profile.is_teacher:  
+        return redirect('teacher_projects_view')
+
+    joined_projects = profile.joined_projects.all()
+    return render(
+        request,
+        'account/student_projects.html',
+        {'projects': joined_projects}
+    )
+
+@login_required
+def teacher_projects_view(request):
+    profile = request.user.profile
+    if not profile.is_teacher:  
+        return redirect('student_projects_view')
+
+    created_projects = profile.created_projects.all()
+    return render(
+        request,
+        'account/teacher_projects.html',
+        {'projects': created_projects}
+    )
+
+@login_required
 def edit_hard_skills(request):
     profile = get_object_or_404(Profile, user=request.user)
     if request.method == "POST":
-        hard_skills_ids = request.POST.getlist('hard_skills')  # IDs das habilidades selecionadas
+        hard_skills_ids = request.POST.getlist('hard_skills')  
         if hard_skills_ids:
-            hard_skills = Skill.objects.filter(id__in=hard_skills_ids)  # Filtra as skills válidas
-            profile.hard_skills.set(hard_skills)  # Atualiza no perfil
+            hard_skills = Skill.objects.filter(id__in=hard_skills_ids)  
+            profile.hard_skills.set(hard_skills)  
             messages.success(request, "Hard skills atualizadas com sucesso!")
         else:
-            profile.hard_skills.clear()  # Limpa se nada foi selecionado
+            profile.hard_skills.clear()  
             messages.info(request, "Nenhuma hard skill selecionada. Lista limpa.")
         return redirect('profile_view')
 
