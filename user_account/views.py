@@ -14,6 +14,7 @@ from feed.models import Project, Skill
 @login_required
 def profile_view(request):
     profile = request.user.profile
+<<<<<<< HEAD
     
     if profile.role == 'student':
         student_projects = profile.joined_projects.all()  
@@ -27,6 +28,15 @@ def profile_view(request):
     return render(request, 'account/profile.html', {'profile': profile,'student_projects': student_projects,
         'teacher_projects': teacher_projects, 'users': users})
 
+=======
+    users = User.objects.exclude(id=request.user.id)
+    skills = Skill.objects.all()  # Passa todas as skills para o dropdown
+    return render(request, 'account/profile.html', {
+        'profile': profile,
+        'users': users,
+        'skills': skills,
+    })
+>>>>>>> 734cc8be799c43f8395fe5eaad1b67f11a7a6df0
 
 @login_required
 def edit_profile(request):
@@ -134,6 +144,7 @@ def teacher_projects_view(request):
 @login_required
 def edit_hard_skills(request):
     profile = get_object_or_404(Profile, user=request.user)
+<<<<<<< HEAD
     if request.method == "POST":
         hard_skills_ids = request.POST.getlist('hard_skills')  
         if hard_skills_ids:
@@ -143,6 +154,27 @@ def edit_hard_skills(request):
         else:
             profile.hard_skills.clear()  
             messages.info(request, "Nenhuma hard skill selecionada. Lista limpa.")
+=======
+    
+    if request.method == 'POST':
+        # Remover skill selecionada
+        if 'remove_skill' in request.POST:
+            skill_id = request.POST['remove_skill']
+            skill = get_object_or_404(Skill, id=skill_id)
+            profile.hard_skills.remove(skill)
+            messages.success(request, f"Skill '{skill.name}' removida com sucesso.")
+        
+        # Adicionar nova skill, se fornecida
+        if 'new_skill' in request.POST and request.POST['new_skill'].strip():
+            new_skill_name = request.POST['new_skill'].strip()
+            skill, created = Skill.objects.get_or_create(name=new_skill_name)
+            profile.hard_skills.add(skill)
+            if created:
+                messages.success(request, f"Nova skill '{skill.name}' adicionada com sucesso.")
+            else:
+                messages.info(request, f"A skill '{skill.name}' já existe e foi adicionada ao seu perfil.")
+        
+>>>>>>> 734cc8be799c43f8395fe5eaad1b67f11a7a6df0
         return redirect('profile_view')
 
     return redirect('profile_view')

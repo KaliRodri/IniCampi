@@ -7,6 +7,8 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
 </head>
 <body>
     <header>
@@ -20,10 +22,58 @@
         </nav>
     </header>
 
+<<<<<<< HEAD
     <!-- Imagem de fundo -->
     <div class="header-image">
         {% if profile.profile_background_image %}
             <img src="{{ profile.profile_background_image.url }}" alt="Foto de fundo">
+=======
+<style>
+    .hard-skill-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.remove-skill-btn {
+    margin-left: 10px;
+    padding: 5px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #ff4d4d; /* Cor da lixeira */
+    font-size: 16px;
+}
+
+.remove-skill-btn:hover {
+    color: #ff0000; /* Cor do ícone de lixeira ao passar o mouse */
+}
+</style>
+
+
+    <!-- Imagem abaixo do cabeçalho -->
+   
+<div class="header-image">
+    {% if profile.profile_background_image %}
+        <img src="{{ profile.profile_background_image.url }}" alt="Foto de fundo">
+    {% else %}
+        <img src="/static/images/Imagem_Fundo_Perfil.jpeg" alt="Foto de fundo padrão">
+    {% endif %}
+    
+    <!-- Ícone de edição para a foto de fundo -->
+    <form action="{% url 'edit_background' %}" method="POST" enctype="multipart/form-data" id="edit-background-form">
+        {% csrf_token %}
+        <input type="file" name="profile_background_image" accept="image/*" id="file-upload-background">
+        <label for="file-upload-background" class="edit-icon-background">✎</label>
+    </form>
+</div>
+
+<div class="container">
+    <div class="profile-wrapper">
+        <!-- Foto de Perfil -->
+        {% if profile.profile_image %}
+            <img src="{{ profile.profile_image.url }}" alt="Foto de perfil" class="avatar">
+>>>>>>> 734cc8be799c43f8395fe5eaad1b67f11a7a6df0
         {% else %}
             <img src="/static/images/Imagem_Fundo_Perfil.jpeg" alt="Foto de fundo padrão">
         {% endif %}
@@ -34,6 +84,41 @@
             <input type="file" name="profile_background_image" accept="image/*" id="file-upload-background">
             <label for="file-upload-background" class="edit-icon-background">✎</label>
         </form>
+<<<<<<< HEAD
+=======
+        
+        <!-- Conteúdo do Perfil -->
+        <div class="profile-container">
+            <h2 class="username">{{ profile.user.username }}</h2>
+            <form action="{% url 'edit_summary' %}" method="POST" id="edit-summary-form">
+                {% csrf_token %}
+                <textarea name="summary" rows="4" cols="30" placeholder="Escreva um resumo sobre você..." 
+                          style="resize: none;" 
+                          onclick="showSaveButton()">{{ profile.summary }}</textarea>
+                <button type="submit" class="follow-btn" id="save-button" onclick="hideSaveButton()">Salvar</button>
+            </form>
+            <!-- Dropdown de Hard Skills -->
+            <form action="{% url 'edit_hard_skills' %}" method="post">
+                {% csrf_token %}
+                <label for="hard_skills">Adicione suas skills:</label>
+                
+                <!-- Input para novas skills -->
+                <input type="text" name="new_skill" placeholder="Digite uma nova skill" id="new-skill-input">
+                <!-- Skills existentes com botão de remoção -->
+                <div id="hard-skills-list">
+                    <h3>Skills:</h3>
+                    {% for skill in profile.hard_skills.all %}
+                        <div class="hard-skill-item">
+                            <span>{{ skill.name }} {% if not forloop.last %}, {% endif %}</span>
+                            <button type="submit" name="remove_skill" value="{{ skill.id }}" class="remove-skill-btn"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <button type="submit">Salvar</button>
+            </form>
+        </div>
+>>>>>>> 734cc8be799c43f8395fe5eaad1b67f11a7a6df0
     </div>
 
     <!-- Container do Perfil -->
@@ -53,6 +138,14 @@
                     <input type="file" name="profile_image" accept="image/*" id="file-upload-avatar">
                     <label for="file-upload-avatar" class="edit-icon-avatar">✎</label>
                 </form>
+                <div class="skills-list">
+                    <h3>Suas Hard Skills:</h3>
+                    <ul>
+                        {% for skill in profile.hard_skills.all %}
+                            <li>{{ skill.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
 
             <!-- Conteúdo do Perfil -->
