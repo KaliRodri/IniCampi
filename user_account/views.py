@@ -10,27 +10,26 @@ from django.contrib import messages
 from feed.models import Project, Skill
 
 
-# Exibir o perfil
+# Exibir o perfil@login_required@login_required
 @login_required
 def profile_view(request):
     profile = request.user.profile
-    if profile.role == 'student':
-        student_projects = profile.joined_projects.all()
-        teacher_projects = None
 
-    elif profile.role == 'teacher':
-        student_projects = None
-        teacher_projects = Project.objects.filter(author=profile)
+    teacher_projects = profile.created_projects.all() if profile.is_teacher() else None
+    student_projects = profile.joined_projects.all() if profile.is_student() else None
+
     users = User.objects.exclude(id=request.user.id)
-    skills = Skill.objects.all()  # Passa todas as skills para o dropdown
+    skills = Skill.objects.all()
+
     return render(request, 'account/profile.html', {
         'profile': profile,
-        'student_projects': student_projects,
         'teacher_projects': teacher_projects,
+        'student_projects': student_projects,
         'users': users,
         'skills': skills,
     })
 
+    
 # Editar o perfil
 @login_required
 def edit_profile(request):

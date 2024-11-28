@@ -25,6 +25,12 @@ class Profile(models.Model):
     profile_background_image = models.ImageField(upload_to='profile_backgrounds/', null=True, blank=True)
     hard_skills = models.ManyToManyField(Skill, blank=True)
     
+    def is_teacher(self):
+        return self.role == 'teacher'
+
+    def is_student(self):
+        return self.role == 'student'
+    
     def __str__(self):
         return f"{self.user.username} ({self.role})"
 
@@ -32,10 +38,22 @@ class Project(models.Model):
     title = models.CharField(max_length=20)
     body = models.TextField(max_length=750)
     calendar = models.DateField(null=True, blank=True)
-    author = models.ForeignKey(Profile, limit_choices_to={'role': 'teacher'}, on_delete=models.CASCADE, null=True, blank=True)
-    students = models.ManyToManyField(Profile, related_name='joined_projects', limit_choices_to={'role': 'student'}, blank=True)
+    author = models.ForeignKey(
+        Profile, 
+        limit_choices_to={'role': 'teacher'}, 
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True,
+        related_name='created_projects'  # Facilita a consulta dos projetos criados
+    )
+    students = models.ManyToManyField(
+        Profile, 
+        related_name='joined_projects', 
+        limit_choices_to={'role': 'student'}, 
+        blank=True
+    )
     image = models.ImageField(upload_to='project_images/', null=True, blank=True)
-    pdf_file = models.FileField(upload_to='project_pdfs/', null=True, blank=True)  # Campo para o PDF
+    pdf_file = models.FileField(upload_to='project_pdfs/', null=True, blank=True)
 
     def __str__(self):
         return self.title

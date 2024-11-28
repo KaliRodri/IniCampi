@@ -113,9 +113,8 @@
     </div>
 
     <div class="projects-container">
-        {% if profile.is_teacher %}
-            <h1>Projetos Criados</h1>
-            {% for project in profile.created_projects.all %}
+        {% if teacher_projects %}
+            {% for project in teacher_projects %}
                 <div class="project-card">
                     <h2 class="project-title">{{ project.title }}</h2>
                     <p class="project-body">{{ project.body|truncatewords:20 }}</p>
@@ -128,43 +127,26 @@
                         {% endfor %}
                     </ul>
                 </div>
-            {% empty %}
-                <p>Você ainda não criou nenhum projeto.</p>
             {% endfor %}
-        {% else %}
-            <h1>Meus Projetos</h1>
-            {% for project in profile.joined_projects.all %}
-                <div class="project-card">
-                    <h2 class="project-title">{{ project.title }}</h2>
-                    <div class="project-image">
-                        {% if project.image %}
-                            <img src="{{ project.image.url }}" alt="{{ project.title }} Image">
-                        {% else %}
-                            <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão">
-                        {% endif %}
-                    </div>
-                    <p class="project-body">{{ project.body|truncatewords:20 }}</p>
-                    <form action="{% url 'unsubscribe_from_project' project.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="view-btn">Desinscrever</button>
-                    </form>
+        {% elif student_projects %}
+            {% for project in student_projects %}
+            <div class="project-card">
+                <h2 class="project-title">{{ project.title }}</h2>
+                <div class="project-image">
+                    {% if project.image %}
+                        <img src="{{ project.image.url }}" alt="{{ project.title }} Image">
+                    {% else %}
+                        <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão">
+                    {% endif %}
                 </div>
-            {% empty %}
-                <p>Você não está cadastrado em nenhum projeto.</p>
+                <p class="project-body">{{ project.body|truncatewords:20 }}</p>
+                <form action="{% url 'unsubscribe_from_project' project.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="view-btn">Desinscrever</button>
+                </form>
+            </div>
             {% endfor %}
         {% endif %}
-    </div>
-    
-                <div class="skills-list">
-                    <h3>Suas Hard Skills:</h3>
-                    <ul>
-                        {% for skill in profile.hard_skills.all %}
-                            <li>{{ skill.name }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        {% endfor %}
     </div>
     
        <div class="container2"></div>
