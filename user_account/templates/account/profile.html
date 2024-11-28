@@ -50,6 +50,28 @@
 }
 </style>
 
+<style>
+    .hard-skill-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.remove-skill-btn {
+    margin-left: 10px;
+    padding: 5px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #ff4d4d; /* Cor da lixeira */
+    font-size: 16px;
+}
+
+.remove-skill-btn:hover {
+    color: #ff0000; /* Cor do ícone de lixeira ao passar o mouse */
+}
+</style>
+
 
     <!-- Imagem abaixo do cabeçalho -->
    
@@ -172,6 +194,14 @@
                     </select>
                     <button type="submit" class="save-btn">Salvar</button>
                 </form>
+                <div class="skills-list">
+                    <h3>Suas Hard Skills:</h3>
+                    <ul>
+                        {% for skill in profile.hard_skills.all %}
+                            <li>{{ skill.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
 

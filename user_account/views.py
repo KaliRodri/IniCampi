@@ -15,6 +15,7 @@ from feed.models import Project, Skill
 def profile_view(request):
     profile = request.user.profile
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     if profile.role == 'student':
         student_projects = profile.joined_projects.all()  
@@ -29,6 +30,8 @@ def profile_view(request):
         'teacher_projects': teacher_projects, 'users': users})
 
 =======
+=======
+>>>>>>> 734cc8be799c43f8395fe5eaad1b67f11a7a6df0
     users = User.objects.exclude(id=request.user.id)
     skills = Skill.objects.all()  # Passa todas as skills para o dropdown
     return render(request, 'account/profile.html', {
@@ -36,6 +39,9 @@ def profile_view(request):
         'users': users,
         'skills': skills,
     })
+<<<<<<< HEAD
+>>>>>>> 734cc8be799c43f8395fe5eaad1b67f11a7a6df0
+=======
 >>>>>>> 734cc8be799c43f8395fe5eaad1b67f11a7a6df0
 
 @login_required
@@ -145,6 +151,7 @@ def teacher_projects_view(request):
 def edit_hard_skills(request):
     profile = get_object_or_404(Profile, user=request.user)
 <<<<<<< HEAD
+<<<<<<< HEAD
     if request.method == "POST":
         hard_skills_ids = request.POST.getlist('hard_skills')  
         if hard_skills_ids:
@@ -155,6 +162,8 @@ def edit_hard_skills(request):
             profile.hard_skills.clear()  
             messages.info(request, "Nenhuma hard skill selecionada. Lista limpa.")
 =======
+=======
+>>>>>>> 734cc8be799c43f8395fe5eaad1b67f11a7a6df0
     
     if request.method == 'POST':
         # Remover skill selecionada
@@ -174,6 +183,9 @@ def edit_hard_skills(request):
             else:
                 messages.info(request, f"A skill '{skill.name}' já existe e foi adicionada ao seu perfil.")
         
+<<<<<<< HEAD
+>>>>>>> 734cc8be799c43f8395fe5eaad1b67f11a7a6df0
+=======
 >>>>>>> 734cc8be799c43f8395fe5eaad1b67f11a7a6df0
         return redirect('profile_view')
 
