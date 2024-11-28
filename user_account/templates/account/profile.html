@@ -7,6 +7,8 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
 </head>
 <body>
     <header>
@@ -20,6 +22,28 @@
         </nav>
     </header>
 </body>
+
+<style>
+    .hard-skill-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.remove-skill-btn {
+    margin-left: 10px;
+    padding: 5px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #ff4d4d; /* Cor da lixeira */
+    font-size: 16px;
+}
+
+.remove-skill-btn:hover {
+    color: #ff0000; /* Cor do ícone de lixeira ao passar o mouse */
+}
+</style>
 
 
     <!-- Imagem abaixo do cabeçalho -->
@@ -66,16 +90,23 @@
                 <button type="submit" class="follow-btn" id="save-button" onclick="hideSaveButton()">Salvar</button>
             </form>
             <!-- Dropdown de Hard Skills -->
-            <form method="post" enctype="multipart/form-data">
+            <form action="{% url 'edit_hard_skills' %}" method="post">
                 {% csrf_token %}
-                <label for="hard_skills">Selecione suas Hard Skills:</label>
-                <select name="hard_skills" id="hard_skills" multiple>
-                    {% for skill in skills %}
-                        <option value="{{ skill.id }}" {% if skill in profile.hard_skills.all %}selected{% endif %}>
-                            {{ skill.name }}
-                        </option>
+                <label for="hard_skills">Adicione suas skills:</label>
+                
+                <!-- Input para novas skills -->
+                <input type="text" name="new_skill" placeholder="Digite uma nova skill" id="new-skill-input">
+                <!-- Skills existentes com botão de remoção -->
+                <div id="hard-skills-list">
+                    <h3>Skills:</h3>
+                    {% for skill in profile.hard_skills.all %}
+                        <div class="hard-skill-item">
+                            <span>{{ skill.name }} {% if not forloop.last %}, {% endif %}</span>
+                            <button type="submit" name="remove_skill" value="{{ skill.id }}" class="remove-skill-btn"><i class="fas fa-trash-alt"></i></button>
+                        </div>
                     {% endfor %}
-                </select>
+                </div>
+                
                 <button type="submit">Salvar</button>
             </form>
         </div>
@@ -99,6 +130,14 @@
                     {% csrf_token %}
                     <button type="submit" class="view-btn">Desinscrever</button>
                 </form>
+                <div class="skills-list">
+                    <h3>Suas Hard Skills:</h3>
+                    <ul>
+                        {% for skill in profile.hard_skills.all %}
+                            <li>{{ skill.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         {% endfor %}
     </div>
