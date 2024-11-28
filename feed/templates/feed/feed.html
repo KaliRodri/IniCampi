@@ -86,20 +86,26 @@
                             {% endif %}
                         </div>
                     
-                        <h3>Alunos Cadastrados</h3>
-                        {% for student in project.students.all %}
-                            <div class="student-info">
-                                {% if student.profile_image %}
-                                    <img src="{{ student.profile_image.url }}" alt="Foto de perfil de {{ student.user.username }}" class="avatar">
-                                {% else %}
-                                    <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
-                                {% endif %}
-                                <h4>{{ student.user.username }}</h4>
-                            </div>
-                        {% empty %}
-                            <p>Nenhum aluno cadastrado.</p>
-                        {% endfor %}
-                    </div>
+                       <h3>Alunos Cadastrados</h3>
+<form method="get" action="{% url 'home' %}" class="search-form">
+    <input type="text" name="search_query" placeholder="Pesquisar aluno..." value="{{ request.GET.search_query }}">
+    <button type="submit">Buscar</button>
+</form>
+
+<div class="students-list">
+    {% for student in filtered_students %}
+        <div class="student-info">
+            {% if student.profile_image %}
+                <img src="{{ student.profile_image.url }}" alt="Foto de perfil de {{ student.user.username }}" class="avatar">
+            {% else %}
+                <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
+            {% endif %}
+            <h4>{{ student.user.username }}</h4>
+        </div>
+    {% empty %}
+        <p>Nenhum aluno encontrado.</p>
+    {% endfor %}
+</div>
         
                     <!-- Botão de ingressar agora está aqui, antes da seção de comentários -->
                     {% if request.user.is_authenticated and request.user.profile.role == 'student' %}
@@ -133,5 +139,23 @@
             {% endfor %}
         </div>
     </main>
+    <script>
+        const searchInput = document.querySelector('[name="search_query"]');
+        const studentInfoElements = document.querySelectorAll('.student-info');
+    
+        searchInput.addEventListener('input', function() {
+            const query = searchInput.value.toLowerCase();
+    
+            studentInfoElements.forEach(function(studentElement) {
+                const studentName = studentElement.querySelector('h4').textContent.toLowerCase();
+                if (studentName.includes(query)) {
+                    studentElement.style.display = '';
+                } else {
+                    studentElement.style.display = 'none';
+                }
+            });
+        });
+    </script>
+    
 </body>
 </html>
