@@ -14,10 +14,19 @@ from feed.models import Project, Skill
 @login_required
 def profile_view(request):
     profile = request.user.profile
+    if profile.role == 'student':
+        student_projects = profile.joined_projects.all()
+        teacher_projects = None
+
+    elif profile.role == 'teacher':
+        student_projects = None
+        teacher_projects = Project.objects.filter(author=profile)
     users = User.objects.exclude(id=request.user.id)
     skills = Skill.objects.all()  # Passa todas as skills para o dropdown
     return render(request, 'account/profile.html', {
         'profile': profile,
+        'student_projects': student_projects,
+        'teacher_projects': teacher_projects,
         'users': users,
         'skills': skills,
     })
@@ -125,3 +134,29 @@ def edit_hard_skills(request):
         return redirect('profile_view')
 
     return redirect('profile_view')
+
+@login_required
+def student_projects_view(request):
+    profile = request.user.profile
+    if profile.is_teacher:
+        return redirect('teacher_projects_view')
+    
+    joined_projects = profile.joined_projects.all()
+    return render(
+        request,
+        'account/student_projects.html',
+        {'projects': joined_projects}
+    )
+
+@login_required
+def teacher_projects_view(request):
+    profile = request.user.profile
+    if not profile.is_teacher:
+        return redirect('student_projects_view')
+    
+    created_projects = profile.created_projects.all()
+    return render(
+        request,
+        'account/teacher_projects.html',
+        {'projects': created_projects}
+    )
