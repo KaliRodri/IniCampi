@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,8 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/feed.css' %}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
 </head>
+
 <body>
     <header>
         <h1>ICampi</h1>
@@ -19,9 +20,9 @@
                 <button type="submit" style="background: none; border: none; cursor: pointer;">
                     <i class="fas fa-search"></i>
                 </button>
-                <a href="{% url 'home' %}" class="clear-search-btn"><i class="fa fa-undo" aria-hidden="true"></i>
+                <a href="{% url 'home' %}" class="clear-search-btn">
+                    <i class="fa fa-undo" aria-hidden="true"></i>
                 </a>
-
             </form>
             <a href="{% url 'profile' %}">Profile</a>
             <form class="logout-form" action="{% url 'logout' %}" method="post">
@@ -38,100 +39,107 @@
         </div>
 
         {% if user.is_authenticated and user.profile.role == 'teacher' %}
-            <a href="{% url 'add_project' %}">
-                <button class="add-project-btn">Adicionar Novo Projeto</button>
-            </a>
+        <a href="{% url 'add_project' %}">
+            <button class="add-project-btn">Adicionar Novo Projeto</button>
+        </a>
         {% endif %}
 
         <div class="projects-container">
             {% for project in projects %}
-                <div class="project-card">
-                    <div class="project-image">
-                        {% if project.image %}
-                            <img src="{{ project.image.url }}" alt="{{ project.title }} Image" class="project-image">
-                        {% else %}
-                            <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão" class="project-image">
+            <div class="project-card">
+                <div class="project-image">
+                    {% if project.image %}
+                    <img src="{{ project.image.url }}" alt="{{ project.title }} Image" class="project-image">
+                    {% else %}
+                    <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão" class="project-image">
+                    {% endif %}
+                </div>
+
+                <h2 class="project-title">{{ project.title }}</h2>
+                <p class="project-body">{{ project.body|truncatewords:20 }}</p>
+                {% if project.pdf_file %}
+                <a href="{{ project.pdf_file.url }}" target="_blank" download>
+                    <button type="button"><i class="fa fa-download" aria-hidden="true"></i></button>
+                </a>
+                {% endif %}
+
+                <div class="project-footer">
+                    <div class="project-footer-content">
+                        <div class="author-info">
+                            {% if request.user.is_authenticated and request.user.profile.role == 'teacher' and project.author.user == request.user %}
+                            <a href="{% url 'edit_project' project.id %}">
+                                <button class="edit-project-btn">✎</button>
+                            </a>
+                            {% endif %}
+                            {% if project.author.profile_image %}
+                            <img src="{{ project.author.profile_image.url }}" alt="Foto de perfil de {{ project.author.user.username }}" class="avatar">
+                            {% else %}
+                            <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
+                            {% endif %}
+                            <h2>{{ project.author.user.username }}</h2>
+                        </div>
+
+                        {% if request.user.is_authenticated and request.user.profile.role == 'teacher' %}
+                        <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn">Excluir</button>
+                        </form>
                         {% endif %}
                     </div>
-                    
-                    <h2 class="project-title">{{ project.title }}</h2>
-                    <p class="project-body">{{ project.body|truncatewords:20 }}</p> <!-- Trunca o texto para caber no layout -->
-                    {% if project.pdf_file %}
-                    <a href="{{ project.pdf_file.url }}" target="_blank" download>
-                        <button type="button"><i class="fa fa-download" aria-hidden="true"></i>
-                        </button>
-                    </a>
-                {% endif %}
-                    <div class="project-footer">
-                        <div class="project-footer-content">
-                            <div class="author-info">
-                                {% if request.user.is_authenticated and request.user.profile.role == 'teacher' and project.author.user == request.user %}
-    <a href="{% url 'edit_project' project.id %}">
-        <button class="edit-project-btn">✎</button>
-    </a>
-{% endif %}
-                                {% if project.author.profile_image %}
-                                    <img src="{{ project.author.profile_image.url }}" alt="Foto de perfil de {{ project.author.user.username }}" class="avatar">
-                                {% else %}
-                                    <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
-                                {% endif %}
-                                <h2>{{ project.author.user.username }}</h2>
-                            </div>
-                    
-                            {% if request.user.is_authenticated and request.user.profile.role == 'teacher' %}
-                                <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="delete-btn">Excluir</button>
-                                </form>
-                            {% endif %}
-                        </div>
-                    
-                        <h3>Alunos Cadastrados</h3>
-                        {% for student in project.students.all %}
-                            <div class="student-info">
-                                {% if student.profile_image %}
-                                    <img src="{{ student.profile_image.url }}" alt="Foto de perfil de {{ student.user.username }}" class="avatar">
-                                {% else %}
-                                    <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
-                                {% endif %}
-                                <h4>{{ student.user.username }}</h4>
-                            </div>
-                        {% empty %}
-                            <p>Nenhum aluno cadastrado.</p>
-                        {% endfor %}
-                    </div>
-        
-                    <!-- Botão de ingressar agora está aqui, antes da seção de comentários -->
-                    {% if request.user.is_authenticated and request.user.profile.role == 'student' %}
-                        <form action="{% url 'join_project' project.id %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="add-project-btn">Ingressar no Projeto</button>
-                        </form>
-                    {% endif %}
 
-                    <!-- Comentários e formulário -->
-                    <div class="comment-section">
-                        <h3>Comentários</h3>
-                        {% for comment in project.comments.all %}
-                            <div class="comment">
-                                <p><strong>{{ comment.author.user.username }}:</strong> {{ comment.body }}</p>
-                                <p><small>Comentado em {{ comment.created_at }}</small></p>
+                    <h3>Alunos Cadastrados</h3>
+                    {% if project.students.all %}
+                    <div id="alunosCarousel{{ project.id }}" class="carousel slide" data-bs-ride="carousel">
+                        <div class="student-info">
+                            {% for student in project.students.all %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <div class="d-flex flex-column align-items-center">
+                                    {% if student.profile_image %}
+                                    <img src="{{ student.profile_image.url }}" alt="Foto de perfil de {{ student.user.username }}" class="avatar">
+                                    {% else %}
+                                    <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
+                                    {% endif %}
+                                    <h4 class="mt-2">{{ student.user.username }}</h4>
+                                </div>
                             </div>
-                        {% empty %}
-                            <p>Nenhum comentário ainda.</p>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
-        
-                    <form class="comment-form" action="{% url 'add_comment' project.id %}" method="post">
-                        {% csrf_token %}
-                        {{ comment_form.body }}
-                        <button type="submit">Comentar</button>
-                    </form>
+                    {% else %}
+                    <p>Nenhum aluno cadastrado.</p>
+                    {% endif %}
                 </div>
+
+                {% if request.user.is_authenticated and request.user.profile.role == 'student' %}
+                <form action="{% url 'join_project' project.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="add-project-btn">Ingressar no Projeto</button>
+                </form>
+                {% endif %}
+
+                <div class="comment-section">
+                    <h3>Comentários</h3>
+                    {% for comment in project.comments.all %}
+                    <div class="comment">
+                        <p><strong>{{ comment.author.user.username }}:</strong> {{ comment.body }}</p>
+                        <p><small>Comentado em {{ comment.created_at }}</small></p>
+                    </div>
+                    {% empty %}
+                    <p>Nenhum comentário ainda.</p>
+                    {% endfor %}
+                </div>
+
+                <form class="comment-form" action="{% url 'add_comment' project.id %}" method="post">
+                    {% csrf_token %}
+                    {{ comment_form.body }}
+                    <button type="submit">Comentar</button>
+                </form>
+            </div>
             {% empty %}
-                <p>Nenhum projeto encontrado.</p>
+            <p>Nenhum projeto encontrado.</p>
             {% endfor %}
         </div>
     </main>
 </body>
+
 </html>
