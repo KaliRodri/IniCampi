@@ -43,6 +43,61 @@
 .remove-skill-btn:hover {
     color: #ff0000; /* Cor do ícone de lixeira ao passar o mouse */
 }
+
+.carousel-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 200vw;
+    overflow: hidden;
+}
+
+.carousel-track-container {
+    overflow: hidden;
+    width: 100%;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease;
+    will-change: transform;
+}
+
+.carousel-slide {
+    min-width: calc(100%); /* Exibe 3 slides por vez */
+    box-sizing: border-box;
+    padding: 50px;
+}
+
+.project-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    text-align: center;
+    margin-right: 20px;
+    min-width: 420px;
+}
+
+.carousel-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
+
 </style>
 
 
@@ -111,14 +166,22 @@
             </form>
         </div>
     </div>
-
-    <div class="projects-container">
-        {% if teacher_projects %}
+    
+    <div class="carousel-container">
+        <button class="carousel-btn prev-btn">&#9664;</button>
+        <div class="carousel-track-container">
+            <ul class="carousel-track">
+                {% if teacher_projects %}
             {% for project in teacher_projects %}
                 <div class="project-card">
-                    <h2 class="project-title">{{ project.title }}</h2>
-                    <p class="project-body">{{ project.body|truncatewords:20 }}</p>
-                    <h3>Estudantes Cadastrados</h3>
+                    <h3 class="project-title">{{ project.title }}</h3>
+                    <div class="project-image">
+                        {% if project.image %}
+                        <img src="{{ project.image.url }}" alt="{{ project.title }}" style="height: 180px; object-fit: cover;">
+                        {% else %}
+                            <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão">
+                        {% endif %}
+                    </div>
                     <ul>
                         {% for student in project.students.all %}
                             <li>{{ student.user.username }}</li>
@@ -134,12 +197,12 @@
                 <h2 class="project-title">{{ project.title }}</h2>
                 <div class="project-image">
                     {% if project.image %}
-                        <img src="{{ project.image.url }}" alt="{{ project.title }} Image">
+                    <img src="{{ project.image.url }}" alt="{{ project.title }}" style="height: 180px; object-fit: cover;">
                     {% else %}
                         <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão">
                     {% endif %}
                 </div>
-                <p class="project-body">{{ project.body|truncatewords:20 }}</p>
+
                 <form action="{% url 'unsubscribe_from_project' project.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="view-btn">Desinscrever</button>
@@ -147,8 +210,12 @@
             </div>
             {% endfor %}
         {% endif %}
+            </ul>
+        </div>
+        <button class="carousel-btn next-btn">&#9654;</button>
     </div>
-    
+
+
        <div class="container2"></div>
         <div class="contacts-container">
             {% for user in users %}
@@ -196,6 +263,34 @@
 
     // Garante que o botão de salvar esteja visível ao carregar a página
     document.getElementById('save-button').style.display = 'none';
+
+    const track = document.querySelector('.carousel-track');
+    const slides = Array.from(track.children);
+    const nextButton = document.querySelector('.next-btn');
+    const prevButton = document.querySelector('.prev-btn');
+    const slideWidth = slides[0].getBoundingClientRect().width;
+
+    // Configuração inicial
+    slides.forEach((slide, index) => {
+        slide.style.left = slideWidth * index + 'px';
+    });
+
+    let currentSlideIndex = 0;
+
+    nextButton.addEventListener('click', () => {
+        if (currentSlideIndex < slides.length-1) {
+            currentSlideIndex++;
+            track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
+        }
+    });
+
+    prevButton.addEventListener('click', () => {
+        if (currentSlideIndex > 0) {
+            currentSlideIndex--;
+            track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
+        }
+    });
+
     </script>
 </body>
 </html>
