@@ -153,15 +153,14 @@
         <div class="contacts-container">
             {% for user in users %}
                 <div class="contact">
-                    <!-- Foto de Perfil -->
+                    
                     {% if user.profile.profile_image %}
                         <img src="{{ user.profile.profile_image.url }}" alt="Foto de {{ user.username }}" class="contact-avatar">
                     {% else %}
                         <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de {{ user.username }}" class="contact-avatar">
                     {% endif %}
                     
-                    <!-- Nome do Usuário -->
-                    <span>{{ user.username }}</span>
+                    <a href="{% url 'profile' user.username %}">{{ user.username }}</a>
                 </div>
                 <hr>
             {% endfor %}
