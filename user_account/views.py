@@ -14,6 +14,7 @@ from feed.models import Project, Skill
 @login_required
 @login_required
 def profile_view(request):
+    
     profile = request.user.profile
 
     # Verifica se o usuário é professor ou estudante
@@ -80,7 +81,7 @@ def edit_background(request):
 
 @login_required
 def profile(request, username):
-    profile = Profile.objects.get(user__username=username)
+    profile = get_object_or_404(Profile, user__username=username)
     
     if request.method == 'POST':
         # Atualiza o resumo, se enviado
@@ -97,7 +98,7 @@ def profile(request, username):
         
         return redirect('profile', username=username)
 
-    return render(request, 'profile.html', {'profile': profile})
+    return render(request, 'account/profile.html', {'profile': profile})
 
 @login_required
 def edit_summary(request):

@@ -296,15 +296,23 @@
             {% if users %}
                 {% for user in users %}
                 <div class="contact">
-                    <!-- Foto de Perfil -->
+                    
                     {% if user.profile.profile_image %}
                         <img src="{{ user.profile.profile_image.url }}" alt="Foto de {{ user.username }}" class="contact-avatar">
                     {% else %}
                         <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de {{ user.username }}" class="contact-avatar">
                     {% endif %}
+<<<<<<< HEAD
+<<<<<<< HEAD
+                    
+                    <a href="{% url 'profile' user.username %}">{{ user.username }}</a>
+=======
+=======
+>>>>>>> main
         
                     <!-- Nome do Usuário -->
                     <span>{{ user.username }}</span>
+>>>>>>> 7a63bc4b19e1aad4a7bb20e707195b417fdf4b4f
                 </div>
                 <hr>
                 {% endfor %}
