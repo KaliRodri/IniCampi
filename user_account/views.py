@@ -12,14 +12,23 @@ from feed.models import Project, Skill
 
 # Exibir o perfil@login_required@login_required
 @login_required
+@login_required
 def profile_view(request):
     
     profile = request.user.profile
 
+    # Verifica se o usuário é professor ou estudante
     teacher_projects = profile.created_projects.all() if profile.is_teacher() else None
     student_projects = profile.joined_projects.all() if profile.is_student() else None
 
-    users = User.objects.exclude(id=request.user.id)
+    # Pesquisa por contatos
+    query = request.GET.get('q', '')  # Obtém o parâmetro 'q' da URL
+    if query:
+        users = User.objects.filter(username__icontains=query).exclude(id=request.user.id)
+        messages.info(request, f"Resultados para '{query}': {users.count()} usuário(s) encontrado(s).")
+    else:
+        users = User.objects.exclude(id=request.user.id)
+
     skills = Skill.objects.all()
 
     return render(request, 'account/profile.html', {
@@ -28,6 +37,7 @@ def profile_view(request):
         'student_projects': student_projects,
         'users': users,
         'skills': skills,
+        'query': query,
     })
 
     
