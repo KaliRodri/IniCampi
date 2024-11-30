@@ -12,7 +12,7 @@
 </head>
 <body>
     <header>
-        <div class="logo">ICampi</div>
+        <h1>ICampi</h1>
         <nav>
             <a href="{% url 'home' %}">Home</a>
             <form class="logout-form" action="{% url 'logout' %}" method="post">
@@ -92,10 +92,60 @@
 
 .prev-btn {
     left: 10px;
+    color: #0056b3;
 }
 
 .next-btn {
     right: 10px;
+    color: #0056b3;
+}
+
+.student-info h4 {
+    color: #0056b3; /* Substitua pelo azul utilizado no código, se conhecido */
+    font-weight: bold; /* Opcional, para destacar o nome */
+    margin-top: 10px; /* Ajusta o espaçamento */
+}
+
+.student-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd; 
+    flex-shrink: 0;
+    display: flex;
+    overflow-x: auto; 
+    gap: 10px;
+    padding: 5px;
+}
+
+.search-container {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-container input {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.search-container button {
+    padding: 10px;
+    margin-left: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: #0056b3;
 }
 
 </style>
@@ -179,15 +229,31 @@
                         {% if project.image %}
                         <img src="{{ project.image.url }}" alt="{{ project.title }}" style="height: 180px; object-fit: cover;">
                         {% else %}
-                            <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão">
+                            <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão"  style="height: 180px; object-fit: cover;">
                         {% endif %}
                     </div>
                     <ul>
-                        {% for student in project.students.all %}
-                            <li>{{ student.user.username }}</li>
-                        {% empty %}
-                            <li>Nenhum estudante cadastrado.</li>
-                        {% endfor %}
+                        {% if project.students.all %}
+                        <div id="alunosCarousel{{ project.id }}" class="carousel slide" data-bs-ride="carousel">
+                            <div class="student-info">
+                                {% if project.students.all %}
+                                <div id="alunosCarousel{{ project.id }}" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="student-info">
+                                        {% for student in project.students.all %}
+                                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <h4 class="mt-2">{{ student.user.username }}</h4>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% else %}
+                                <p>Nenhum aluno cadastrado.</p>
+                                {% endif %}
+                            </div>
+                        </div>
                     </ul>
                 </div>
             {% endfor %}
@@ -215,10 +281,20 @@
         <button class="carousel-btn next-btn">&#9654;</button>
     </div>
 
-
-       <div class="container2"></div>
+    
+       <div class="container2">
+        <div class="search-container">
+            <form method="get" action=".">
+                <input type="text" name="q" value="{{ query }}" placeholder="Pesquisar usuários, bio ou skills">
+                <button type="submit"><i class="fas fa-search"></i></button>
+                <a href="{% url 'profile' %}" class="clear-search-btn">
+                    <i class="fa fa-undo" aria-hidden="true"></i>
+                </a>
+            </form>
+        </div>
         <div class="contacts-container">
-            {% for user in users %}
+            {% if users %}
+                {% for user in users %}
                 <div class="contact">
                     <!-- Foto de Perfil -->
                     {% if user.profile.profile_image %}
@@ -226,12 +302,15 @@
                     {% else %}
                         <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de {{ user.username }}" class="contact-avatar">
                     {% endif %}
-                    
+        
                     <!-- Nome do Usuário -->
                     <span>{{ user.username }}</span>
                 </div>
                 <hr>
-            {% endfor %}
+                {% endfor %}
+            {% else %}
+                <p>Nenhum usuário encontrado.</p>
+            {% endif %}
         </div>
     </div>
 
