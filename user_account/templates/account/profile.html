@@ -14,6 +14,15 @@
     <header>
         <h1>ICampi</h1>
         <nav>
+            <div class="search-container">
+                <form method="get" action=".">
+                    <input type="text" name="q" value="{{ query }}" placeholder="Pesquisar usuários">
+                    <button type="submit"style="background: none; border: none; cursor: pointer;"><i class="fas fa-search "></i></button>
+                    <a href="{% url 'profile' %}" class="clear-search-btn">
+                        <i class="fa fa-undo" aria-hidden="true"></i>
+                    </a>
+                </form>
+            </div>
             <a href="{% url 'home' %}">Home</a>
             <form class="logout-form" action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
@@ -24,7 +33,8 @@
 </body>
 
 <style>
-    .hard-skill-item {
+
+.hard-skill-item {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
@@ -128,24 +138,16 @@
 
 .search-container input {
     width: 70%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
+    padding: 1px;
 }
 
 .search-container button {
     padding: 10px;
-    margin-left: 10px;
-    background-color: #007bff;
+    font-size: 15px;
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-.search-container button:hover {
-    background-color: #0056b3;
 }
 
 </style>
@@ -268,7 +270,6 @@
                         <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão">
                     {% endif %}
                 </div>
-
                 <form action="{% url 'unsubscribe_from_project' project.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="view-btn">Desinscrever</button>
@@ -279,19 +280,9 @@
             </ul>
         </div>
         <button class="carousel-btn next-btn">&#9654;</button>
-    </div>
-
-    
+    </div> 
        <div class="container2">
-        <div class="search-container">
-            <form method="get" action=".">
-                <input type="text" name="q" value="{{ query }}" placeholder="Pesquisar usuários, bio ou skills">
-                <button type="submit"><i class="fas fa-search"></i></button>
-                <a href="{% url 'profile' %}" class="clear-search-btn">
-                    <i class="fa fa-undo" aria-hidden="true"></i>
-                </a>
-            </form>
-        </div>
+       
         <div class="contacts-container">
             {% if users %}
                 {% for user in users %}
@@ -302,17 +293,10 @@
                     {% else %}
                         <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de {{ user.username }}" class="contact-avatar">
                     {% endif %}
-<<<<<<< HEAD
-<<<<<<< HEAD
-                    
-                    <a href="{% url 'profile' user.username %}">{{ user.username }}</a>
-=======
-=======
->>>>>>> main
-        
                     <!-- Nome do Usuário -->
                     <span>{{ user.username }}</span>
->>>>>>> 7a63bc4b19e1aad4a7bb20e707195b417fdf4b4f
+                    <a href="{% url 'profile' user.username %}">Ver Perfil</a>
+                    
                 </div>
                 <hr>
                 {% endfor %}

@@ -141,9 +141,9 @@ def edit_hard_skills(request):
             else:
                 messages.info(request, f"A skill '{skill.name}' já existe e foi adicionada ao seu perfil.")
         
-        return redirect('profile_view')
+        return redirect('profile')
 
-    return redirect('profile_view')
+    return redirect('profile')
 
 @login_required
 def student_projects_view(request):
