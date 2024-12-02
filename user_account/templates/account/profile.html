@@ -294,7 +294,8 @@
                         <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de {{ user.username }}" class="contact-avatar">
                     {% endif %}
                     <!-- Nome do Usuário -->
-                    <span>{{ user.username }}</span>
+                    <span><a href="{% url 'chat_with_user' user.username %}">{{ user.username }}</a>
+                    </span>
                     <a href="{% url 'profile' user.username %}">Ver Perfil</a>
                     
                 </div>
