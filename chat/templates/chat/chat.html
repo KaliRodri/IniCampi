@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Sala: {{ room_name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f3f4f6;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #chat-log {
+            width: 90%;
+            max-width: 600px;
+            height: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            padding: 10px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #chat-message-input {
+            width: 80%;
+            max-width: 500px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        #chat-message-input:focus {
+            border-color: #0056b3;
+        }
+
+        #chat-message-input-button {
+            padding: 10px 20px;
+            margin-left: 10px;
+            background-color: #0056b3;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #chat-message-input-button:hover {
+            background-color: #003d82;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #e8f0fe;
+            color: #333;
+        }
+
+        .message.sender {
+            background-color: #cfe9ff;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat - Sala: {{ room_name }}</h1>
+    <div id="chat-log">
+        <!-- As mensagens serão adicionadas aqui -->
+    </div>
+    <div>
+        <input id="chat-message-input" type="text" placeholder="Digite uma mensagem...">
+        <button id="chat-message-input-button">Enviar</button>
+    </div>
+
+    <script>
+const roomName = "{{ room_name }}";
+const chatSocket = new WebSocket(
+    'ws://' + window.location.host + '/ws/chat/' + roomName + '/'  // Certifique-se de que a URL está sendo construída corretamente
+);
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const chatLog = document.querySelector('#chat-log');
+            const newMessage = document.createElement('div');
+            newMessage.classList.add('message');
+            newMessage.textContent = data.message;
+            chatLog.appendChild(newMessage);
+            chatLog.scrollTop = chatLog.scrollHeight; // Rolagem automática
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input-button').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            if (message.trim() !== "") {
+                chatSocket.send(JSON.stringify({
+                    'message': message
+                }));
+                messageInputDom.value = '';  // Limpar o campo de texto após envio
+            }
+        };
+
+        document.querySelector('#chat-message-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('#chat-message-input-button').click();
+            }
+        });
+    </script>
+</body>
+</html>

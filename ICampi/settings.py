@@ -31,8 +31,24 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'user_account'
+    'user_account',
+    'channels',
+    'chat'
+
 ]
+
+# Especifique o ASGI application no lugar do WSGI
+ASGI_APPLICATION = 'ICampi.asgi.application'
+
+# Opcional: Defina o Redis (para gerenciar conexões WebSocket em escala)
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 SITE_ID = 1
 

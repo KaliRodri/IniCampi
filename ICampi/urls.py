@@ -15,4 +15,5 @@ urlpatterns = [
     path('', ProjectListView.as_view(), name='home'),
     path('profile/', profile_view, name='profile'),  # Ação para a função view
     path('profile/', include('user_account.urls')), 
+    path('chat/', include('chat.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
