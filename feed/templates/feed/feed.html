@@ -130,7 +130,9 @@
                 {% endif %}
 
                 <div class="comment-section">
-                    <button class="toggle-comments-btn" onclick="toggleComments({{ project.id }})">Comentários</button>
+                    <button id="toggle-comments-btn-{{ project.id }}" class="toggle-comments-btn" onclick="toggleComments({{ project.id }})">
+                        Comentários
+                    </button>
                     
                     <div id="comments-{{ project.id }}" class="comments-content" style="display: none;">
                         <h3>Comentários</h3>
@@ -138,17 +140,22 @@
                         <div class="comment">
                             <p><strong>{{ comment.author.user.username }}:</strong> {{ comment.body }}</p>
                             <p><small>Comentado em {{ comment.created_at }}</small></p>
+                            {% if request.user.is_authenticated and request.user.profile.role == 'teacher' and project.author == request.user %}
+                            <form action="{% url 'delete_comment' project.id comment.id %}" method="post" class="delete-comment-form">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-comment-btn">Excluir</button>
+                            </form>
+                            {% endif %}
                         </div>
                         {% empty %}
                         <p>Nenhum comentário ainda.</p>
                         {% endfor %}
-                
+                        
                         <form class="comment-form" action="{% url 'add_comment' project.id %}" method="post">
                             {% csrf_token %}
                             {{ comment_form.body }}
-                            <button type="submit">Comentar</button>
+                            <button type="submit" class="comment-submit-btn">Comentar</button>
                         </form>
-                        <br>
                         <button class="close-comments-btn" onclick="closeComments({{ project.id }})">Fechar</button>
                     </div>
                 </div>
