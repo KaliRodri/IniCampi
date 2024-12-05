@@ -35,7 +35,7 @@ class Profile(models.Model):
         return f"{self.user.username} ({self.role})"
 
 class Project(models.Model):
-    title = models.CharField(max_length=20)
+    title = models.CharField(max_length=100)
     body = models.TextField(max_length=750)
     calendar = models.DateField(null=True, blank=True)
     author = models.ForeignKey(

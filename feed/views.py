@@ -110,3 +110,19 @@ def edit_project(request, project_id):
         form = ProjectForm(instance=project)
 
     return render(request, 'edit_project.html', {'form': form, 'project': project})
+
+@login_required
+def delete_comment(request, project_id, comment_id):
+   
+    project = get_object_or_404(Project, id=project_id)
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    
+    if request.user.profile == comment.author or (request.user.profile.role == 'teacher' and project.author == request.user.profile):
+        comment.delete()
+        messages.success(request, "Comentário excluído com sucesso!")
+    else:
+        messages.error(request, "Você não tem permissão para excluir este comentário.")
+
+    # Redireciona de volta para a página do projeto
+    return redirect('feed', project_id=project_id)

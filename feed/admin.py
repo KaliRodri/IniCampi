@@ -7,10 +7,12 @@ class ProjectInLine(admin.TabularInline):
     extra = 0
     fields = ('title', 'body', 'calendar')
     
-class CommentInLine(admin.TabularInline): 
+class CommentInLine(admin.TabularInline):
     model = Comment
     extra = 0
-    fields = ('author', 'body')
+    fields = ('author', 'body', 'project')  # Adicione "project" para contexto
+    readonly_fields = ('author', 'project')  # Campos apenas para visualização
+    can_delete = True  # Permite excluir comentários diretamente no admin
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
