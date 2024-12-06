@@ -93,11 +93,6 @@ def join_project(request, project_id):
     project.students.add(student_profile)  # Adiciona o aluno ao campo 'students' do projeto
     return redirect('home')  # Redireciona para a página inicial ou para os detalhes do projeto, se necessário
 
-from django.shortcuts import get_object_or_404, render, redirect
-from .models import Project
-from .forms import ProjectForm
-from django.http import Http404
-
 @login_required
 def edit_project(request, project_id):
     project = get_object_or_404(Project, id=project_id)
