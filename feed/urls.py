@@ -15,6 +15,6 @@ urlpatterns = [
     path('profile/', profile_view, name='profile'),  # Ação para a função view
     path('project/', views.add_project, name='add_project'),
     path('projects/join/<int:project_id>/', views.join_project, name='join_project'),
-    path('project/<int:project_id>/delete_comment/', views.delete_comment, name='delete_comment'),
+    path('project/<int:project_id>/delete_comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
     
 ]
