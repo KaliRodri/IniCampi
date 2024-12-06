@@ -21,6 +21,94 @@
         font-size: 15px;
 
     }
+<<<<<<< Updated upstream
+=======
+    .comment {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.comment-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.comment-content p {
+    margin: 0;
+    flex-grow: 1; /* Permite que o texto ocupe o espaço disponível */
+}
+
+.delete-comment-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ff4d4d; /* Cor da lixeira */
+    font-size: 16px;
+    padding: 5px;
+    transition: color 0.3s ease;
+}
+
+.delete-comment-btn:hover {
+    background-color: #999;
+}
+
+.comments-content {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.comment-form {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.comment-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comment-form button:hover {
+    background-color: #0056b3;
+}
+
+.close-comments-btn {
+    margin-top: 10px;
+    background-color: #ccc;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.close-comments-btn:hover {
+    background-color: #999;
+}
+
+.status-aberto {
+    color: green;  /* Cor verde para "Aberto" */
+}
+
+.status-fechado {
+    color: red;  /* Cor vermelha para "Fechado" */
+}
+
+#project-closed-btn{
+    background-color: #999;
+}
+
+>>>>>>> Stashed changes
 </style>
 
 <body>
@@ -58,7 +146,17 @@
 
         <div class="projects-container">
             {% for project in projects %}
+            
             <div class="project-card">
+                <div class="project-status" style="text-align: right; font-weight: bold;">
+                    Status: 
+                    {% if project.status == 1 %}
+                        <span class="status-aberto">Aberto</span>
+                    {% else %}
+                        <span class="status-fechado">Fechado</span>
+                    {% endif %}
+                </div>
+                
                 <div class="project-image">
                     {% if project.image %}
                     <img src="{{ project.image.url }}" alt="{{ project.title }} Image" class="project-image">
@@ -123,11 +221,15 @@
                 </div>
 
                 {% if request.user.is_authenticated and request.user.profile.role == 'student' %}
-                <form action="{% url 'join_project' project.id %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="add-project-btn">Candidatar no Projeto</button>
-                </form>
-                {% endif %}
+    {% if project.status == 1 %}
+        <form action="{% url 'join_project' project.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="add-project-btn">Candidatar no Projeto</button>
+        </form>
+    {% else %}
+        <button class="add-project-btn" id="project-closed-btn"disabled>Projeto Fechado</button>
+    {% endif %}
+{% endif %}
 
                 <div class="comment-section">
                     <button id="toggle-comments-btn-{{ project.id }}" class="toggle-comments-btn" onclick="toggleComments({{ project.id }})">

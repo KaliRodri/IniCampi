@@ -50,7 +50,7 @@ def edit_profile(request):
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('profile_view')
+            return redirect('profile')
     else:
         form = ProfileForm(instance=profile)
     return render(request, 'account/edit_profile.html', {'form': form, 'skills': skills, 'profile': profile})
@@ -74,10 +74,10 @@ def edit_background(request):
         if 'profile_background_image' in request.FILES:
             profile.profile_background_image = request.FILES['profile_background_image']
             profile.save()  
-            return redirect('profile_view')  
+            return redirect('profile')  
         else:
             return HttpResponse("Nenhuma imagem foi enviada", status=400)
-    return redirect('profile_view')  
+    return redirect('profile')  
 
 @login_required
 def profile(request, username):
@@ -117,7 +117,7 @@ def unsubscribe_from_project(request, project_id):
     if profile in project.students.all():
         project.students.remove(profile)
     
-    return redirect(reverse('profile_view'))
+    return redirect(reverse('profile'))
 
 @login_required
 def edit_hard_skills(request):

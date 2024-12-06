@@ -35,6 +35,14 @@ class Profile(models.Model):
         return f"{self.user.username} ({self.role})"
 
 class Project(models.Model):
+    OPEN_STATUS = True
+    CLOSED_STATUS = False
+
+    STATUS_CHOICES = (
+        (OPEN_STATUS, 'Aberto'),
+        (CLOSED_STATUS, 'Fechado'),
+    )
+
     title = models.CharField(max_length=100)
     body = models.TextField(max_length=750)
     calendar = models.DateField(null=True, blank=True)
@@ -44,7 +52,7 @@ class Project(models.Model):
         on_delete=models.CASCADE, 
         null=True, 
         blank=True,
-        related_name='created_projects'  # Facilita a consulta dos projetos criados
+        related_name='created_projects'
     )
     students = models.ManyToManyField(
         Profile, 
@@ -54,6 +62,7 @@ class Project(models.Model):
     )
     image = models.ImageField(upload_to='project_images/', null=True, blank=True)
     pdf_file = models.FileField(upload_to='project_pdfs/', null=True, blank=True)
+    status = models.BooleanField(default=OPEN_STATUS, choices=STATUS_CHOICES)
 
     def __str__(self):
         return self.title
