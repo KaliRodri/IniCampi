@@ -21,8 +21,6 @@
         font-size: 15px;
 
     }
-<<<<<<< Updated upstream
-=======
     .comment {
     display: flex;
     flex-direction: column;
@@ -108,7 +106,6 @@
     background-color: #999;
 }
 
->>>>>>> Stashed changes
 </style>
 
 <body>
@@ -237,17 +234,31 @@
                     </button>
                     
                     <div id="comments-{{ project.id }}" class="comments-content" style="display: none;">
-                        <h3>Comentários</h3>
                         {% for comment in project.comments.all %}
                         <div class="comment">
-                            <p><strong>{{ comment.author.user.username }}:</strong> {{ comment.body }}</p>
-                            <p><small>Comentado em {{ comment.created_at }}</small></p>
-                            {% if request.user.is_authenticated and request.user.profile.role == 'teacher' and project.author == request.user %}
-                            <form action="{% url 'delete_comment' project.id comment.id %}" method="post" class="delete-comment-form">
-                                {% csrf_token %}
-                                <button type="submit" class="delete-comment-btn">Excluir</button>
-                            </form>
-                            {% endif %}
+                            <div class="comment-content">
+                                <p><strong>{{ comment.author.user.username }}:</strong> {{ comment.body }}</p>
+                                {% if request.user.is_authenticated %}
+    {% if request.user.profile == comment.author %}
+        <!-- O usuário é o autor do comentário -->
+        <form action="{% url 'delete_comment' project.id comment.id %}" method="post" class="delete-comment-form">
+            {% csrf_token %}
+            <button type="submit" class="delete-comment-btn" title="Excluir">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+    {% elif request.user.profile.role == 'teacher' and project.author == request.user.profile %}
+        <!-- O usuário é um professor e o autor do projeto -->
+        <form action="{% url 'delete_comment' project.id comment.id %}" method="post" class="delete-comment-form">
+            {% csrf_token %}
+            <button type="submit" class="delete-comment-btn" title="Excluir">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+    {% endif %}
+{% endif %}
+                            </div>
+                            <p><small>{{ comment.created_at }}</small></p>
                         </div>
                         {% empty %}
                         <p>Nenhum comentário ainda.</p>

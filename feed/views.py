@@ -8,6 +8,7 @@ from .forms import CommentForm
 from .forms import ProjectForm
 from django.http import Http404
 from django.db.models import Q
+from django.contrib import messages
 
 
 @login_required
