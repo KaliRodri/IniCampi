@@ -209,7 +209,7 @@
                     {% for skill in profile.hard_skills.all %}
                         <div class="hard-skill-item">
                             <span>{{ skill.name }} {% if not forloop.last %}, {% endif %}</span>
-                            <button type="submit" name="remove_skill" value="{{ skill.id }}" class="remove-skill-btn"><i class="fas fa-trash-alt"></i></button>
+                            <button type="submit" name="remove_skill" value="{{ skill.id }}" class="remove-skill-btn"><i class="fas fa-trash"></i></button>
                         </div>
                     {% endfor %}
                 </div>
