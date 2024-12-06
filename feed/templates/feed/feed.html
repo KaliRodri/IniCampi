@@ -21,6 +21,8 @@
         font-size: 15px;
 
     }
+<<<<<<< Updated upstream
+=======
     .comment {
     display: flex;
     flex-direction: column;
@@ -94,6 +96,19 @@
     background-color: #999;
 }
 
+.status-aberto {
+    color: green;  /* Cor verde para "Aberto" */
+}
+
+.status-fechado {
+    color: red;  /* Cor vermelha para "Fechado" */
+}
+
+#project-closed-btn{
+    background-color: #999;
+}
+
+>>>>>>> Stashed changes
 </style>
 
 <body>
@@ -131,7 +146,17 @@
 
         <div class="projects-container">
             {% for project in projects %}
+            
             <div class="project-card">
+                <div class="project-status" style="text-align: right; font-weight: bold;">
+                    Status: 
+                    {% if project.status == 1 %}
+                        <span class="status-aberto">Aberto</span>
+                    {% else %}
+                        <span class="status-fechado">Fechado</span>
+                    {% endif %}
+                </div>
+                
                 <div class="project-image">
                     {% if project.image %}
                     <img src="{{ project.image.url }}" alt="{{ project.title }} Image" class="project-image">
@@ -167,7 +192,7 @@
                         {% if request.user.is_authenticated and request.user.profile.role == 'teacher' %}
                         <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="delete-btn"><i class="fas fa-trash"></i></button>
+                            <button type="submit" class="delete-btn">Excluir</button>
                         </form>
                         {% endif %}
                     </div>
@@ -196,11 +221,15 @@
                 </div>
 
                 {% if request.user.is_authenticated and request.user.profile.role == 'student' %}
-                <form action="{% url 'join_project' project.id %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="add-project-btn">Candidatar no Projeto</button>
-                </form>
-                {% endif %}
+    {% if project.status == 1 %}
+        <form action="{% url 'join_project' project.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="add-project-btn">Candidatar no Projeto</button>
+        </form>
+    {% else %}
+        <button class="add-project-btn" id="project-closed-btn"disabled>Projeto Fechado</button>
+    {% endif %}
+{% endif %}
 
                 <div class="comment-section">
                     <button id="toggle-comments-btn-{{ project.id }}" class="toggle-comments-btn" onclick="toggleComments({{ project.id }})">
@@ -208,36 +237,22 @@
                     </button>
                     
                     <div id="comments-{{ project.id }}" class="comments-content" style="display: none;">
+                        <h3>Comentários</h3>
                         {% for comment in project.comments.all %}
                         <div class="comment">
-                            <div class="comment-content">
-                                <p><strong>{{ comment.author.user.username }}:</strong> {{ comment.body }}</p>
-                                {% if request.user.is_authenticated %}
-    {% if request.user.profile == comment.author %}
-        <!-- O usuário é o autor do comentário -->
-        <form action="{% url 'delete_comment' project.id comment.id %}" method="post" class="delete-comment-form">
-            {% csrf_token %}
-            <button type="submit" class="delete-comment-btn" title="Excluir">
-                <i class="fas fa-trash"></i>
-            </button>
-        </form>
-    {% elif request.user.profile.role == 'teacher' and project.author == request.user.profile %}
-        <!-- O usuário é um professor e o autor do projeto -->
-        <form action="{% url 'delete_comment' project.id comment.id %}" method="post" class="delete-comment-form">
-            {% csrf_token %}
-            <button type="submit" class="delete-comment-btn" title="Excluir">
-                <i class="fas fa-trash"></i>
-            </button>
-        </form>
-    {% endif %}
-{% endif %}
-                            </div>
-                            <p><small>{{ comment.created_at }}</small></p>
+                            <p><strong>{{ comment.author.user.username }}:</strong> {{ comment.body }}</p>
+                            <p><small>Comentado em {{ comment.created_at }}</small></p>
+                            {% if request.user.is_authenticated and request.user.profile.role == 'teacher' and project.author == request.user %}
+                            <form action="{% url 'delete_comment' project.id comment.id %}" method="post" class="delete-comment-form">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-comment-btn">Excluir</button>
+                            </form>
+                            {% endif %}
                         </div>
                         {% empty %}
                         <p>Nenhum comentário ainda.</p>
                         {% endfor %}
-                    
+                        
                         <form class="comment-form" action="{% url 'add_comment' project.id %}" method="post">
                             {% csrf_token %}
                             {{ comment_form.body }}
@@ -245,7 +260,6 @@
                         </form>
                         <button class="close-comments-btn" onclick="closeComments({{ project.id }})">Fechar</button>
                     </div>
-                    
                 </div>
             </div>
             {% empty %}
@@ -261,12 +275,13 @@
     
             if (commentsSection.style.display === "none" || commentsSection.style.display === "") {
                 commentsSection.style.display = "block";  // Mostrar comentários
+                commentsButton.innerText = "Esconder Comentários";  // Mudar texto do botão
             } else {
                 commentsSection.style.display = "none";  // Esconder comentários
                 commentsButton.innerText = "Comentários";  // Mudar texto do botão
             }
         }
-
+    
         // Função para fechar os comentários diretamente
         function closeComments(projectId) {
             var commentsSection = document.getElementById('comments-' + projectId);

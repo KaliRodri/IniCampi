@@ -16,7 +16,7 @@ class CommentForm(forms.ModelForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['title', 'body', 'calendar', 'image', 'pdf_file']  # Inclui pdf_file
+        fields = ['title', 'body', 'calendar', 'image', 'pdf_file', 'status']  # Inclui o campo 'status'
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-field',
@@ -37,6 +37,9 @@ class ProjectForm(forms.ModelForm):
             'pdf_file': forms.ClearableFileInput(attrs={  # Adiciona o campo para PDF
                 'class': 'form-field',
             }),
+            'status': forms.Select(attrs={
+                'class': 'form-field',  # Adiciona a classe para estilizar
+            }),
         }
         labels = {
             'title': '',  # Oculta o rótulo do campo 'title'
@@ -44,4 +47,5 @@ class ProjectForm(forms.ModelForm):
             'calendar': '',
             'image': 'Foto da IC',
             'pdf_file': 'Ementa do IC',  # Oculta o rótulo do campo 'pdf_file'
+            'status': 'Status',  # Rótulo do campo 'status'
         }
