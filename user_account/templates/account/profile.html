@@ -32,11 +32,11 @@
         }
         
         .carousel-slide {
-            min-width: calc(100%); /* Exibe 3 slides por vez */
-            box-sizing: border-box;
-            padding: 0 50;
+    min-width: 100%;
+    box-sizing: border-box;
+    padding: 0 50px;
+}
 
-        }
         
         .carousel-btn {
             background-color: transparent;
@@ -51,12 +51,12 @@
         
         .prev-btn {
             left: 10px;
-            color: #0056b3;
+            color: #0162ca;
         }
         
         .next-btn {
             right: 10px;
-            color: #0056b3;
+            color: #0162ca;
         }
         
         .student-info h4 {
@@ -85,6 +85,131 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        .username {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 40px;
+    text-align: left;
+    color: #333;
+}
+
+.user-summary p {
+    max-width: 100%;              /* Garante que o texto se ajuste à largura do contêiner */
+    white-space: normal;          /* Permite que o texto quebre */
+    word-wrap: break-word;        /* Quebra palavras longas que não cabem */
+    overflow-wrap: break-word;    /* Compatibilidade com navegadores antigos */
+    word-break: break-word;       /* Garante a quebra de palavras */
+    margin: 0 auto;               /* Centraliza o conteúdo */
+    padding: 10px;                /* Adiciona padding para conforto visual */
+    text-align: justify;
+}
+
+.profile-wrapper {
+    position: relative;
+    min-width: 230px;
+}
+
+.project-card-student {
+    background-color: #fff;
+
+    border-radius: 8px;
+    padding: 20px;  
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    height: 350px;  
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;  
+}
+
+.project-card-teacher {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;  
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    height: 350px;  
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;  
+}
+
+.profile-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 60px 20px 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    position: relative;
+    z-index: 1;
+}
+
+.modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Restante do CSS */
+        #hard-skills ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #hard-skills li {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 20px;
+            border: 2px solid #0056b3;
+            border-radius: 25px;
+            background-color: #f0f8ff;
+            color: #0056b3;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        #hard-skills li:hover {
+            background-color: #0056b3;
+            color: white;
+            cursor: pointer;
+        }
+
+
+
         
         </style>
     <header>
@@ -137,27 +262,33 @@
             
             <div class="profile-container">
                 <h2 class="username">{{ profile.user.username }}</h2>
-                <form action="{% url 'edit_summary' %}" method="POST" id="edit-summary-form">
-                    {% csrf_token %}
-                    <textarea name="summary" rows="4" cols="30" placeholder="Escreva um resumo sobre você..." style="resize: none;" onclick="showSaveButton()">{{ profile.summary }}</textarea>
-                    <button type="submit" class="follow-btn" id="save-button" onclick="hideSaveButton()">Salvar</button>
-                </form>
-
-                <form action="{% url 'edit_hard_skills' %}" method="post">
-                    {% csrf_token %}
-                    <label for="hard_skills">Adicione suas skills:</label>
-                    <input type="text" name="new_skill" placeholder="Digite uma nova skill" id="new-skill-input">
-                    <div id="hard-skills-list">
-                        <h3>Skills:</h3>
-                        {% for skill in profile.hard_skills.all %}
-                            <div class="hard-skill-item">
-                                <span>{{ skill.name }} {% if not forloop.last %}, {% endif %}</span>
-                                <button type="submit" name="remove_skill" value="{{ skill.id }}" class="remove-skill-btn"><i class="fas fa-trash"></i></button>
+                <a href="{% url 'edit_profile' %}" class="edit-profile-btn">Editar Perfil</a>
+                <br>
+                <div class="user-summary">
+                    <p>{{ profile.summary|default:"Este usuário ainda não escreveu um sumário." }}</p>
+                </div>
+                <div class="hard-skills-section">
+                    <button id="toggle-skills-btn">Mostrar Skills</button>
+                    <div id="skillsModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <h2>Skills de {{ profile.user.username }}</h2>
+                            <div id="hard-skills">
+                                {% if profile.hard_skills %}
+                                    <ul>
+                                        {% for skill in profile.hard_skills.all %}
+                                            <li>{{ skill.name }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p>Este usuário ainda não adicionou suas hard skills.</p>
+                                {% endif %}
                             </div>
-                        {% endfor %}
+                        </div>
                     </div>
-                    <button type="submit">Salvar</button>
-                </form>
+            
+                </div>
+                
             </div>
         </div>
         
@@ -168,7 +299,7 @@
                     {% if teacher_projects %}
                         {% for project in teacher_projects %}
                             <li class="carousel-slide">
-                                <div class="project-card-student">
+                                <div class="project-card-teacher">
                                     <h2 class="project-title">{{ project.title }}</h2>
                                     <div class="project-image">
                                         {% if project.image %}
@@ -249,6 +380,28 @@
     </div>
 
     <script>
+        
+          // Abrir o modal
+        const toggleButton = document.getElementById('toggle-skills-btn');
+        const modal = document.getElementById('skillsModal');
+        const closeButton = document.querySelector('.close');
+
+        toggleButton.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        // Fechar o modal
+        closeButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // Fechar o modal clicando fora dele
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
         document.getElementById('file-upload-background').addEventListener('change', function() {
             var form = document.getElementById('edit-background-form');
             if (this.files.length > 0) {
@@ -262,17 +415,6 @@
                 form.submit();
             }
         });
-
-        function showSaveButton() {
-            document.getElementById('save-button').style.display = 'block';
-        }
-
-        function hideSaveButton() {
-            document.getElementById('save-button').style.display = 'none';
-        }
-
-        document.getElementById('save-button').style.display = 'none';
-
         const track = document.querySelector('.carousel-track');
         const slides = Array.from(track.children);
         const nextButton = document.querySelector('.next-btn');

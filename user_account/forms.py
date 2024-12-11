@@ -7,10 +7,28 @@ class ProfileForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
+    
+    # Limite para o campo 'summary'
+    summary = forms.CharField(
+        widget=forms.Textarea(attrs={'maxlength': '170'}),  # Limita a 100 caracteres no frontend
+        max_length=170,  # Limita a 100 caracteres no backend
+        required=False
+    )
+
     class Meta:
-        models = Profile
-        fields = ['user.username', 'summary', 'profile_image', 'profile_background_image', 'hard_skills']
+        model = Profile
+        fields = ['summary', 'hard_skills']
         widgets = {
-            'hard_skills': forms.CheckboxSelectMultiple,  # Renderiza como checkboxes
+            'hard_skills': forms.CheckboxSelectMultiple,
         }
+
+    def clean_hard_skills(self):
+        hard_skills = self.cleaned_data.get('hard_skills')
         
+        # Validando a quantidade de hard skills selecionadas
+        if len(hard_skills) < 6:
+            raise forms.ValidationError("Você precisa selecionar pelo menos 6 habilidades.")
+        if len(hard_skills) > 6:
+            raise forms.ValidationError("Você pode selecionar no máximo 6 habilidades.")
+        
+        return hard_skills

@@ -101,15 +101,6 @@ def profile(request, username):
     return render(request, 'account/profile.html', {'profile': profile})
 
 @login_required
-def edit_summary(request):
-    if request.method == 'POST':
-        profile = Profile.objects.get(user=request.user)
-        profile.summary = request.POST.get('summary')
-        profile.save()
-        return redirect('profile')  
-    return render(request, 'profile.html')
-
-@login_required
 def unsubscribe_from_project(request, project_id):
     profile = request.user.profile
     project = get_object_or_404(Project, id=project_id)
@@ -118,32 +109,6 @@ def unsubscribe_from_project(request, project_id):
         project.students.remove(profile)
     
     return redirect(reverse('profile'))
-
-@login_required
-def edit_hard_skills(request):
-    profile = get_object_or_404(Profile, user=request.user)
-    
-    if request.method == 'POST':
-        # Remover skill selecionada
-        if 'remove_skill' in request.POST:
-            skill_id = request.POST['remove_skill']
-            skill = get_object_or_404(Skill, id=skill_id)
-            profile.hard_skills.remove(skill)
-            messages.success(request, f"Skill '{skill.name}' removida com sucesso.")
-        
-        # Adicionar nova skill, se fornecida
-        if 'new_skill' in request.POST and request.POST['new_skill'].strip():
-            new_skill_name = request.POST['new_skill'].strip()
-            skill, created = Skill.objects.get_or_create(name=new_skill_name)
-            profile.hard_skills.add(skill)
-            if created:
-                messages.success(request, f"Nova skill '{skill.name}' adicionada com sucesso.")
-            else:
-                messages.info(request, f"A skill '{skill.name}' já existe e foi adicionada ao seu perfil.")
-        
-        return redirect('profile')
-
-    return redirect('profile')
 
 @login_required
 def student_projects_view(request):
@@ -170,3 +135,17 @@ def teacher_projects_view(request):
         'account/teacher_projects.html',
         {'projects': created_projects}
     )
+    
+@login_required
+def edit_profile(request):
+    profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=profile)
+
+    return render(request, 'account/edit_profile.html', {'form': form})
