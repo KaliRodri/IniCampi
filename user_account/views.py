@@ -12,7 +12,6 @@ from feed.models import Project, Skill
 
 # Exibir o perfil@login_required@login_required
 @login_required
-@login_required
 def profile_view(request):
     
     profile = request.user.profile

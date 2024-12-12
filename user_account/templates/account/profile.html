@@ -68,6 +68,8 @@
                     <a href="{% url 'edit_profile' %}" class="edit-profile-btn">✎</a>
                 </div>
                 <br>
+                <p class="contact-number">{{ profile.contact_number}}</p>
+       
                 <div class="user-summary">
                     <p>{{ profile.summary|default:"Este usuário ainda não escreveu um sumário." }}</p>
                 </div>

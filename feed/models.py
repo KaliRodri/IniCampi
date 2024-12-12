@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
+
 
 
 # Create your models here.
@@ -24,6 +26,12 @@ class Profile(models.Model):
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     profile_background_image = models.ImageField(upload_to='profile_backgrounds/', null=True, blank=True)
     hard_skills = models.ManyToManyField(Skill, blank=True)
+    contact_number = models.CharField(
+        max_length=15, 
+        blank=True, 
+        null=True,
+        validators=[RegexValidator(r'^\+?1?\d{9,15}$', 'O número de contato deve estar no formato: "999999999". Até 15 dígitos permitidos.')]
+    )
     
     def is_teacher(self):
         return self.role == 'teacher'

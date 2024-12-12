@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/feed.css' %}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.17/dist/sweetalert2.min.css" rel="stylesheet">
+
 </head>
 
 <style>
@@ -217,7 +219,7 @@
 
                 {% if request.user.is_authenticated and request.user.profile.role == 'student' %}
                 {% if project.status == 1 %}
-                <form action="{% url 'join_project' project.id %}" method="post" style="display:inline;">
+                <form action="{% url 'join_project' project.id %}" method="post" style="display:inline;" onsubmit="return showSuccessAlert();">
                     {% csrf_token %}
                     <button type="submit" class="add-project-btn">Candidatar no Projeto</button>
                 </form>
@@ -296,6 +298,11 @@
             commentsSection.style.display = "none";
             commentsButton.innerText = "Comentários";
         }
+
+        function showSuccessAlert() {
+        alert("Você foi cadastrado no projeto com sucesso!");
+        return true;  // Isso garante que o formulário será enviado após o alerta
+    }
     </script>
 </body>
 
