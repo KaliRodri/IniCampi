@@ -5,15 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* Alinha o conteúdo na parte superior da tela */
+        height: 100vh;
+        box-sizing: border-box;
+    }
+    .form-container {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 70%;  /* Ajustado para 70% da largura da tela */
+        max-width: 900px;  /* Limita a largura para 900px */
+        box-sizing: border-box;
+        height: auto; /* Permite mais altura para o conteúdo */
+        margin-top: 20px; /* Distância do topo da tela */
+    }
+    .form-container h2 {
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 24px;
+    }
+    .form-group {
+        margin-bottom: 15px; /* Menor margem entre os campos */
+        text-align: left;
+    }
+    label {
+        font-weight: bold;
+        font-size: 16px;
+    }
+    input[type="text"], textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    textarea {
+        resize: none;
+        height: 80px;
+    }
+    button {
+        width: 100%;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 15px;
+    }
+    button:hover {
+        background-color: #218838;
+    }
+    #hard-skills ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px; /* Espaçamento menor entre as checkboxes */
+    }
+    #hard-skills li {
+        display: inline-block;
+        margin: 5px; 
+        padding: 5px 10px;
+        border: 1px solid #0056b3;
+        border-radius: 15px; /* Tamanho reduzido */
+        background-color: #f0f8ff;
+        color: #0056b3;
+        font-weight: bold;
+        font-size: 12px; /* Fonte ainda menor */
+        transition: all 0.3s ease;
+    }
+    #hard-skills li:hover {
+        background-color: #4ea1fa;
+        color: white;
+        cursor: pointer;
+    }
+    .error-message {
+        color: red;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    /* Estilos Responsivos */
+    @media (max-width: 768px) {
+        .form-container {
+            width: 85%;
+            padding: 15px; /* Menos padding em telas menores */
+        }
+        #hard-skills li {
+            font-size: 11px; /* Fonte ainda menor em telas pequenas */
+            padding: 3px 8px; /* Menos padding para itens de checkbox */
+        }
+    }
+</style>
 <body>
-<<<<<<< Updated upstream
-    <h2>Editar Perfil</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Salvar</button>
-</form>
-=======
     <div class="form-container">
         <h2>Editar Perfil</h2>
         <form method="post" enctype="multipart/form-data">
@@ -21,7 +117,7 @@
 
             <div class="form-group">
                 <label for="id_first_name">Nome:</label>
-                {{ form.first_name }}
+                <input type="text" name="first_name" id="id_first_name" value="{{ form.first_name.value }}" required>
                 {% if form.first_name.errors %}
                 <div class="error-message">
                     {% for error in form.first_name.errors %}
@@ -54,7 +150,6 @@
                 </div>
                 {% endif %}
             </div>
-            
 
             <div class="form-group">
                 <label for="id_hard_skills">Hard Skills:</label>
@@ -77,6 +172,5 @@
             <button type="submit" class="btn btn-success">Salvar</button>
         </form>
     </div>
->>>>>>> Stashed changes
 </body>
 </html>
