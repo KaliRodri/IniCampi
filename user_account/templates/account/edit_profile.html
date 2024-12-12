@@ -6,11 +6,77 @@
     <title>Document</title>
 </head>
 <body>
+<<<<<<< Updated upstream
     <h2>Editar Perfil</h2>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Salvar</button>
 </form>
+=======
+    <div class="form-container">
+        <h2>Editar Perfil</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_first_name">Nome:</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                <div class="error-message">
+                    {% for error in form.first_name.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_summary">Resumo:</label>
+                {{ form.summary }}
+                {% if form.summary.errors %}
+                <div class="error-message">
+                    {% for error in form.summary.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_contact_number">Número de Contato:</label>
+                {{ form.contact_number }}
+                {% if form.contact_number.errors %}
+                <div class="error-message">
+                    {% for error in form.contact_number.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+
+            <div class="form-group">
+                <label for="id_hard_skills">Hard Skills:</label>
+                <ul id="hard-skills">
+                    {% for checkbox in form.hard_skills %}
+                    <li>
+                        {{ checkbox }} <!-- Exibe apenas o checkbox, sem duplicar o nome -->
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% if form.hard_skills.errors %}
+                <div class="error-message">
+                    {% for error in form.hard_skills.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-success">Salvar</button>
+        </form>
+    </div>
+>>>>>>> Stashed changes
 </body>
 </html>

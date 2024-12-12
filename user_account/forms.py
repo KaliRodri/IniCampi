@@ -10,17 +10,30 @@ class ProfileForm(forms.ModelForm):
     
     # Limite para o campo 'summary'
     summary = forms.CharField(
+<<<<<<< Updated upstream
         widget=forms.Textarea(attrs={'maxlength': '170'}),  # Limita a 100 caracteres no frontend
         max_length=170,  # Limita a 100 caracteres no backend
+=======
+        widget=forms.Textarea(attrs={
+            'maxlength': '170',
+            'placeholder': 'Escreva sobre um pouco você',
+            'class': 'form-control'
+        }),
+        max_length=170,
+>>>>>>> Stashed changes
         required=False
     )
 
     class Meta:
         model = Profile
+<<<<<<< Updated upstream
         fields = ['summary', 'hard_skills']
         widgets = {
             'hard_skills': forms.CheckboxSelectMultiple,
         }
+=======
+        fields = ['summary', 'hard_skills', 'contact_number']
+>>>>>>> Stashed changes
 
     def clean_hard_skills(self):
         hard_skills = self.cleaned_data.get('hard_skills')

@@ -113,8 +113,9 @@
         <h2>CADASTRO</h2>
         <form method="post" action="{% url 'account_signup' %}">
             {% csrf_token %} 
-            <input type="text" placeholder="username" name="username" required>
+            <input type="text" placeholder="Nome" name="username" required>
             <input type="email" placeholder="Email" name="email" required>
+            <input type="text" placeholder="Telefone" name="telephone" required>
             <input type="password" placeholder="Senha" name="password1" required>
             <input type="password" placeholder="Confirme a Senha" name="password2" required>
 
