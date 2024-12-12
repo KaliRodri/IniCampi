@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,216 +10,16 @@
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
+
 <body>
-    <style>
-
-        .carousel-container {
-            display: flex;
-            align-items: center;
-            position: relative;
-            width: 80vw;
-            overflow: hidden;
-        }
-        
-        .carousel-track-container {
-            overflow: hidden;
-            width: 100%;
-        }
-        
-        .carousel-track {
-            display: flex;
-            transition: transform 0.5s ease;
-            will-change: transform;
-        }
-        
-        .carousel-slide {
-    min-width: 100%;
-    box-sizing: border-box;
-    padding: 0 50px;
-}
-
-        
-        .carousel-btn {
-            background-color: transparent;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 10;
-        }
-        
-        .prev-btn {
-            left: 10px;
-            color: #0162ca;
-        }
-        
-        .next-btn {
-            right: 10px;
-            color: #0162ca;
-        }
-        
-        .student-info h4 {
-            color: #0056b3; /* Substitua pelo azul utilizado no código, se conhecido */
-            font-weight: bold; /* Opcional, para destacar o nome */
-            margin-top: 10px; /* Ajusta o espaçamento */
-        }
-        
-        .search-container {
-        
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .search-container input {
-            width: 70%;
-            padding: 1px;
-        }
-        
-        .search-container button {
-            padding: 10px;
-            font-size: 15px;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .username {
-    font-size: 24px;
-    font-weight: bold;
-    margin-top: 40px;
-    text-align: left;
-    color: #333;
-}
-
-.user-summary p {
-    max-width: 100%;              /* Garante que o texto se ajuste à largura do contêiner */
-    white-space: normal;          /* Permite que o texto quebre */
-    word-wrap: break-word;        /* Quebra palavras longas que não cabem */
-    overflow-wrap: break-word;    /* Compatibilidade com navegadores antigos */
-    word-break: break-word;       /* Garante a quebra de palavras */
-    margin: 0 auto;               /* Centraliza o conteúdo */
-    padding: 10px;                /* Adiciona padding para conforto visual */
-    text-align: justify;
-}
-
-.profile-wrapper {
-    position: relative;
-    min-width: 230px;
-}
-
-.project-card-student {
-    background-color: #fff;
-
-    border-radius: 8px;
-    padding: 20px;  
-    text-align: center;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    height: 350px;  
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;  
-}
-
-.project-card-teacher {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;  
-    text-align: center;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    height: 350px;  
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;  
-}
-
-.profile-container {
-    background-color: white;
-    border-radius: 8px;
-    padding: 60px 20px 20px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    position: relative;
-    z-index: 1;
-}
-
-.modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 10px;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        /* Restante do CSS */
-        #hard-skills ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        #hard-skills li {
-            display: inline-block;
-            margin: 5px;
-            padding: 10px 20px;
-            border: 2px solid #0056b3;
-            border-radius: 25px;
-            background-color: #f0f8ff;
-            color: #0056b3;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        #hard-skills li:hover {
-            background-color: #0056b3;
-            color: white;
-            cursor: pointer;
-        }
-
-
-
-        
-        </style>
     <header>
         <h1>ICampi</h1>
         <nav>
             <div class="search-container">
                 <form method="get" action=".">
                     <input type="text" name="q" value="{{ query }}" placeholder="Pesquisar usuários">
-                    <button type="submit" style="background: none; border: none; cursor: pointer;"><i class="fas fa-search "></i></button>
+                    <button type="submit" style="background: none; border: none; cursor: pointer;"><i
+                            class="fas fa-search "></i></button>
                     <a href="{% url 'profile' %}" class="clear-search-btn">
                         <i class="fa fa-undo" aria-hidden="true"></i>
                     </a>
@@ -234,12 +35,13 @@
 
     <div class="header-image">
         {% if profile.profile_background_image %}
-            <img src="{{ profile.profile_background_image.url }}" alt="Foto de fundo">
+        <img src="{{ profile.profile_background_image.url }}" alt="Foto de fundo">
         {% else %}
-            <img src="/static/images/Imagem_Fundo_Perfil.jpeg" alt="Foto de fundo padrão">
+        <img src="/static/images/Imagem_Fundo_Perfil.jpeg" alt="Foto de fundo padrão">
         {% endif %}
-        
-        <form action="{% url 'edit_background' %}" method="POST" enctype="multipart/form-data" id="edit-background-form">
+
+        <form action="{% url 'edit_background' %}" method="POST" enctype="multipart/form-data"
+            id="edit-background-form">
             {% csrf_token %}
             <input type="file" name="profile_background_image" accept="image/*" id="file-upload-background">
             <label for="file-upload-background" class="edit-icon-background">✎</label>
@@ -249,20 +51,22 @@
     <div class="container">
         <div class="profile-wrapper">
             {% if profile.profile_image %}
-                <img src="{{ profile.profile_image.url }}" alt="Foto de perfil" class="avatar">
+            <img src="{{ profile.profile_image.url }}" alt="Foto de perfil" class="avatar">
             {% else %}
-                <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
+            <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar">
             {% endif %}
-            
+
             <form action="{% url 'edit_avatar' %}" method="POST" enctype="multipart/form-data" id="edit-avatar-form">
                 {% csrf_token %}
                 <input type="file" name="profile_image" accept="image/*" id="file-upload-avatar">
                 <label for="file-upload-avatar" class="edit-icon-avatar">✎</label>
             </form>
-            
+
             <div class="profile-container">
-                <h2 class="username">{{ profile.user.username }}</h2>
-                <a href="{% url 'edit_profile' %}" class="edit-profile-btn">Editar Perfil</a>
+                <div class="username-container">
+                    <h2 class="username">{{ profile.user.username }}</h2>
+                    <a href="{% url 'edit_profile' %}" class="edit-profile-btn">✎</a>
+                </div>
                 <br>
                 <div class="user-summary">
                     <p>{{ profile.summary|default:"Este usuário ainda não escreveu um sumário." }}</p>
@@ -275,104 +79,112 @@
                             <h2>Skills de {{ profile.user.username }}</h2>
                             <div id="hard-skills">
                                 {% if profile.hard_skills %}
-                                    <ul>
-                                        {% for skill in profile.hard_skills.all %}
-                                            <li>{{ skill.name }}</li>
-                                        {% endfor %}
-                                    </ul>
+                                <ul>
+                                    {% for skill in profile.hard_skills.all %}
+                                    <li>{{ skill.name }}</li>
+                                    {% endfor %}
+                                </ul>
                                 {% else %}
-                                    <p>Este usuário ainda não adicionou suas hard skills.</p>
+                                <p>Este usuário ainda não adicionou suas hard skills.</p>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
-            
+
                 </div>
-                
+
             </div>
         </div>
-        
+
         <div class="carousel-container">
             <button class="carousel-btn prev-btn">&#9664;</button>
             <div class="carousel-track-container">
                 <ul class="carousel-track">
                     {% if teacher_projects %}
-                        {% for project in teacher_projects %}
-                            <li class="carousel-slide">
-                                <div class="project-card-teacher">
-                                    <h2 class="project-title">{{ project.title }}</h2>
-                                    <div class="project-image">
-                                        {% if project.image %}
-                                            <img src="{{ project.image.url }}" alt="{{ project.title }}" style="height: 160px; object-fit: cover;">
-                                        {% else %}
-                                            <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão" style="height: 160px; object-fit: cover; margin-top: 30px;">
-                                        {% endif %}
-                                    </div>
-                                    {% if project.students.all %}
-                                        <div id="alunosCarousel{{ project.id }}" class="carousel_slide" data-bs-ride="carousel">
-                                            <div class="student-info">
-                                                {% for student in project.students.all %}
-                                                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                                        <div class="student-info-container">
-                                                            {% if student.profile_image %}
-                                                                <img src="{{ student.profile_image.url }}" alt="Foto de {{ student.user.username }}" class="avatar_aluno">
-                                                            {% else %}
-                                                                <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão" class="avatar_aluno">
-                                                            {% endif %}
-                                                            <h4 class="mt-2">{{ student.user.username }}</h4>
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
+                    {% for project in teacher_projects %}
+                    <li class="carousel-slide">
+                        <div class="project-card-teacher">
+                            <h2 class="project-title">{{ project.title }}</h2>
+                            <div class="project-image">
+                                {% if project.image %}
+                                <img src="{{ project.image.url }}" alt="{{ project.title }}"
+                                    style="height: 160px; object-fit: cover;">
+                                {% else %}
+                                <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão"
+                                    style="height: 160px; object-fit: cover; margin-top: 30px;">
+                                {% endif %}
+                            </div>
+                            {% if project.students.all %}
+                            <div id="alunosCarousel{{ project.id }}" class="carousel_slide" data-bs-ride="carousel">
+                                <div class="student-info">
+                                    {% for student in project.students.all %}
+                                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                        <div class="student-info-container">
+                                            {% if student.profile_image %}
+                                            <img src="{{ student.profile_image.url }}"
+                                                alt="Foto de {{ student.user.username }}" class="avatar_aluno">
+                                            {% else %}
+                                            <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de perfil padrão"
+                                                class="avatar_aluno">
+                                            {% endif %}
+                                            <h4 class="mt-2">{{ student.user.username }}</h4>
                                         </div>
-                                    {% else %}
-                                        <p>Nenhum aluno cadastrado.</p>
-                                    {% endif %}
-                                </div>
-                            </li>
-                        {% endfor %}
-                    {% elif student_projects %}
-                        {% for project in student_projects %}
-                            <li class="carousel-slide">
-                                <div class="project-card-student">
-                                    <h2 class="project-title">{{ project.title }}</h2>
-                                    <div class="project-image">
-                                        {% if project.image %}
-                                            <img src="{{ project.image.url }}" alt="{{ project.title }}" style="height: 160px; object-fit: cover;">
-                                        {% else %}
-                                            <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão" style="height: 160px; object-fit: cover; margin-top: 30px;">
-                                        {% endif %}
                                     </div>
-                                    <form action="{% url 'unsubscribe_from_project' project.id %}" method="post">
-                                        {% csrf_token %}
-                                        <button type="submit" class="view-btn">Desinscrever</button>
-                                    </form>
+                                    {% endfor %}
                                 </div>
-                            </li>
-                        {% endfor %}
+                            </div>
+                            {% else %}
+                            <p>Nenhum aluno cadastrado.</p>
+                            {% endif %}
+                        </div>
+                    </li>
+                    {% endfor %}
+                    {% elif student_projects %}
+                    {% for project in student_projects %}
+                    <li class="carousel-slide">
+                        <div class="project-card-student">
+                            <h2 class="project-title">{{ project.title }}</h2>
+                            <div class="project-image">
+                                {% if project.image %}
+                                <img src="{{ project.image.url }}" alt="{{ project.title }}"
+                                    style="height: 160px; object-fit: cover;">
+                                {% else %}
+                                <img src="/static/images/Avatar_Padrão.jpeg" alt="Imagem do Projeto Padrão"
+                                    style="height: 160px; object-fit: cover; margin-top: 30px;">
+                                {% endif %}
+                            </div>
+                            <form action="{% url 'unsubscribe_from_project' project.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="view-btn">Desinscrever</button>
+                            </form>
+                        </div>
+                    </li>
+                    {% endfor %}
                     {% endif %}
                 </ul>
             </div>
             <button class="carousel-btn next-btn">&#9654;</button>
-        </div> 
+        </div>
 
         <div class="container2">
             <div class="contacts-container">
                 {% if users %}
-                    {% for user in users %}
-                        <div class="contact">
-                            {% if user.profile.profile_image %}
-                                <img src="{{ user.profile.profile_image.url }}" alt="Foto de {{ user.username }}" class="contact-avatar">
-                            {% else %}
-                                <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de {{ user.username }}" class="contact-avatar">
-                            {% endif %}
-                            <span><a href="{% url 'chat_with_user' user.username %}">{{ user.username }}</a></span>
-                            <a href="{% url 'profile' user.username %}">Ver Perfil</a>
-                        </div>
-                        <hr>
-                    {% endfor %}
+                {% for user in users %}
+                <div class="contact">
+                    {% if user.profile.profile_image %}
+                    <img src="{{ user.profile.profile_image.url }}" alt="Foto de {{ user.username }}"
+                        class="contact-avatar">
+                    {% else %}
+                    <img src="/static/images/Avatar_Padrão.jpeg" alt="Foto de {{ user.username }}"
+                        class="contact-avatar">
+                    {% endif %}
+                    <span><a href="{% url 'chat_with_user' user.username %}">{{ user.username }}</a></span>
+                    <a href="{% url 'profile' user.username %}">Ver Perfil</a>
+                </div>
+                <hr>
+                {% endfor %}
                 {% else %}
-                    <p>Nenhum usuário encontrado.</p>
+                <p>Nenhum usuário encontrado.</p>
                 {% endif %}
             </div>
         </div>
@@ -380,8 +192,8 @@
     </div>
 
     <script>
-        
-          // Abrir o modal
+
+        // Abrir o modal
         const toggleButton = document.getElementById('toggle-skills-btn');
         const modal = document.getElementById('skillsModal');
         const closeButton = document.querySelector('.close');
@@ -402,14 +214,14 @@
             }
         });
 
-        document.getElementById('file-upload-background').addEventListener('change', function() {
+        document.getElementById('file-upload-background').addEventListener('change', function () {
             var form = document.getElementById('edit-background-form');
             if (this.files.length > 0) {
                 form.submit();
             }
         });
 
-        document.getElementById('file-upload-avatar').addEventListener('change', function() {
+        document.getElementById('file-upload-avatar').addEventListener('change', function () {
             var form = document.getElementById('edit-avatar-form');
             if (this.files.length > 0) {
                 form.submit();
@@ -442,4 +254,5 @@
         });
     </script>
 </body>
+
 </html>
