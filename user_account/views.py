@@ -10,18 +10,18 @@ from django.contrib import messages
 from feed.models import Project, Skill
 
 
-# Exibir o perfil@login_required@login_required
+
 @login_required
 def profile_view(request):
     
     profile = request.user.profile
 
-    # Verifica se o usuário é professor ou estudante
+    
     teacher_projects = profile.created_projects.all() if profile.is_teacher() else None
     student_projects = profile.joined_projects.all() if profile.is_student() else None
 
-    # Pesquisa por contatos
-    query = request.GET.get('q', '')  # Obtém o parâmetro 'q' da URL
+    
+    query = request.GET.get('q', '')  
     if query:
         users = User.objects.filter(username__icontains=query).exclude(id=request.user.id)
         messages.info(request, f"Resultados para '{query}': {users.count()} usuário(s) encontrado(s).")
@@ -40,7 +40,6 @@ def profile_view(request):
     })
 
     
-# Editar o perfil
 @login_required
 def edit_profile(request):
     profile = request.user.profile
@@ -81,7 +80,10 @@ def edit_background(request):
 @login_required
 def profile(request, username):
     profile = get_object_or_404(Profile, user__username=username)
-    
+
+    teacher_projects = profile.created_projects.all() if profile.is_teacher() else None
+    student_projects = profile.joined_projects.all() if profile.is_student() else None
+
     if request.method == 'POST':
         # Atualiza o resumo, se enviado
         if 'summary' in request.POST:
@@ -97,7 +99,11 @@ def profile(request, username):
         
         return redirect('profile', username=username)
 
-    return render(request, 'account/profile.html', {'profile': profile})
+    return render(request, 'account/profile.html', {
+        'profile': profile,
+        'teacher_projects': teacher_projects,
+        'student_projects': student_projects
+    })
 
 @login_required
 def unsubscribe_from_project(request, project_id):
