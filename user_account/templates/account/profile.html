@@ -155,10 +155,12 @@
                                     style="height: 160px; object-fit: cover; margin-top: 30px;">
                                 {% endif %}
                             </div>
+                            {% if profile.user == request.user %}
                             <form action="{% url 'unsubscribe_from_project' project.id %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="view-btn">Desinscrever</button>
                             </form>
+                            {% endif %}
                         </div>
                     </li>
                     {% endfor %}
