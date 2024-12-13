@@ -6,4 +6,4 @@ class FeedConfig(AppConfig):
     name = 'feed'
 
     def ready(self):
-        import feed.signals  # Garante que os sinais sejam registrados
+        import feed.signals  

@@ -11,7 +11,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Estrutura principal */
+
 .container {
     display: flex;
     max-width: 1200px;
@@ -20,13 +20,13 @@ body {
     gap: 30px;
 }
 
-/* Contêiner principal do perfil para posicionamento relativo */
+
 .profile-wrapper {
     position: relative;
     min-width: 800px;
 }
 
-/* Perfil do usuário */
+
 .profile-container {
     background-color: white;
     border-radius: 8px;
@@ -39,7 +39,7 @@ body {
     z-index: 1;
 }
 
-/* Avatar (foto de perfil) */
+
 .avatar {
     width: 180px;
     height: 180px;
@@ -54,7 +54,7 @@ body {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Detalhes do perfil */
+
 .details {
     color: #555;
     font-size: 16px;
@@ -62,7 +62,7 @@ body {
     text-align: center;
 }
 
-/* Botões de ações */
+
 .follow-btn,
 .edit-avatar-btn {
     background-color: #5c6bc0;
@@ -75,7 +75,7 @@ body {
     margin-top: 15px;
 }
 
-/* Seção de Projetos */
+
 .projects-container {
     flex: 1;
     display: flex;
@@ -84,14 +84,14 @@ body {
     flex-wrap: wrap;
 }
 
-/* Título dos projetos */
+
 .project-title {
     color: #0162ca;
     font-weight: bold;
     font-size: 20px;
 }
 
-/* Imagens dos projetos */
+
 .project-image img {
     width: 100%;
     height: auto;
@@ -103,7 +103,7 @@ body {
 
 }
 
-/* Rodapé do cartão de projeto */
+
 .project-footer .avatar_aluno {
     display: flex;
     align-items: center;
@@ -117,7 +117,7 @@ body {
     margin: 0;
 }
 
-/* Títulos do projeto */
+
 .project-card h3,
 .project-card p {
     margin-top: 15px;
@@ -129,7 +129,7 @@ body {
     margin-top: 60px;
 }
 
-/* Texto truncado */
+
 .project-body {
     color: #5c6bc0;
     width: 100%;
@@ -138,7 +138,7 @@ body {
     text-overflow: ellipsis;
 }
 
-/* Botão de visualização do projeto */
+
 .view-btn {
     background-color: #28a745;
     color: white;
@@ -149,7 +149,7 @@ body {
     font-size: 16px;
 }
 
-/* Seção de Contatos */
+
 .contacts-container {
     width: 150%;
     background-color: white;
@@ -163,7 +163,7 @@ body {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Contato individual */
+
 .contact {
     display: flex;
     align-items: center;
@@ -171,7 +171,7 @@ body {
     color: #555;
 }
 
-/* Avatar do contato */
+
 .contact-avatar {
     width: 40px;
     height: 40px;
@@ -179,12 +179,12 @@ body {
     border-radius: 50%;
 }
 
-/* Nome do contato */
+
 .contact span {
     font-size: 16px;
 }
 
-/* Link de contato */
+
 .contact a {
     font-size: 14px;
     text-decoration: none;
@@ -197,7 +197,7 @@ body {
     color: #5c6bc0;
 }
 
-/* Estilização do botão de upload de arquivo */
+
 .file-upload-container {
     position: relative;
     width: 100%;
@@ -226,7 +226,7 @@ body {
     background-color: #1f3c88;
 }
 
-/* Contêiner do cabeçalho (fundo) */
+
 .header-image {
     width: 100%;
     height: 200px;
@@ -241,7 +241,7 @@ body {
     object-position: center;
 }
 
-/* Ícone de edição sobre a foto de perfil */
+
 .edit-icon-avatar {
     position: absolute;
     top: -115px;
@@ -267,7 +267,7 @@ body {
     text-align: center;
 }
 
-/* Inputs escondidos */
+
 #file-upload-avatar,
 #file-upload-background {
     display: none;
@@ -282,7 +282,7 @@ select {
     font-size: 14px;
 }
 
-/* Item de habilidades */
+
 .hard-skill-item {
     display: flex;
     align-items: center;
@@ -303,7 +303,7 @@ select {
     color: #ff0000;
 }
 
-/* Carrossel de projetos */
+
 
 .carousel-track-container {
     width: 800px;  
@@ -370,11 +370,11 @@ select {
     justify-content: center;
     text-align: center;
     margin-right: 10px;
-    min-width: 90px;  /* Aumentei a largura mínima para as imagens dos alunos */
+    min-width: 90px;  
 }
 
 .avatar_aluno {
-    width: 50px;  /* Aumentei o tamanho da imagem do aluno */
+    width: 50px;  
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
@@ -384,15 +384,11 @@ select {
 
 h4 {
     margin-top: 10px;
-    font-size: 16px;  /* Aumentei o tamanho da fonte */
+    font-size: 16px; 
     color: #333;
     font-weight: bold;
 }
 
-
-
-
-/* Nome do usuário */
 .username {
     font-size: 24px;
     font-weight: bold;
@@ -578,7 +574,6 @@ h4 {
     cursor: pointer;
 }
 
-/* Restante do CSS */
 #hard-skills ul {
     list-style: none;
     padding: 0;

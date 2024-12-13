@@ -14,13 +14,13 @@ from django.contrib import messages
 @login_required
 def add_project(request):
     if request.user.profile.role != 'teacher':
-        return redirect('home')  # Redireciona caso o usuário não seja professor
+        return redirect('home')  
 
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
             project = form.save(commit=False)
-            project.author = request.user.profile  # Define o autor como o professor logado
+            project.author = request.user.profile  
             project.save()
             return redirect('home')
     else:
@@ -37,9 +37,9 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        query = self.request.GET.get('q')  # Captura o parâmetro de pesquisa na URL
+        query = self.request.GET.get('q')  
         if query:
-            # Filtra projetos com base no título, corpo ou autor
+            
             queryset = queryset.filter(
                 Q(title__icontains=query) |
                 Q(body__icontains=query) |
@@ -49,11 +49,11 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['comment_form'] = CommentForm()  # Inclui o formulário de comentário no contexto
-        context['query'] = self.request.GET.get('q', '')  # Inclui a query no contexto para o formulário de pesquisa
+        context['comment_form'] = CommentForm()  
+        context['query'] = self.request.GET.get('q', '')  
         return context
 
-# Função para adicionar comentários diretamente no feed
+
 @login_required
 def add_comment(request, project_id):
     project = get_object_or_404(Project, id=project_id)
@@ -64,8 +64,8 @@ def add_comment(request, project_id):
             comment.project = project
             comment.author = request.user.profile
             comment.save()
-            return redirect('home')  # Redireciona para o feed após salvar o comentário
-    return redirect('home')  # Redireciona para o feed mesmo em caso de erro
+            return redirect('home')  
+    return redirect('home')  
 
 @login_required
 def delete_project(request, project_id):
@@ -76,29 +76,29 @@ def delete_project(request, project_id):
     if is_author or is_admin:
         project.delete()
     
-    return redirect('home')  # Redireciona após a exclusão
+    return redirect('home')  
 
-# Função para que alunos se inscrevam nos projetos
+
 @login_required
 def join_project(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     
-    # Verifica se o usuário é um aluno
+    
     if request.user.profile.role != 'student':
-        return redirect('home')  # Redireciona caso o usuário não seja aluno
-    # Verifica se o aluno já está inscrito no projeto
+        return redirect('home')  
+   
     if request.user.profile in project.students.all():
-        return redirect('home')  # Caso já tenha ingressado, redireciona de volta
-    # Adiciona o aluno ao projeto
+        return redirect('home')  
+    
     student_profile = request.user.profile
-    project.students.add(student_profile)  # Adiciona o aluno ao campo 'students' do projeto
-    return redirect('home')  # Redireciona para a página inicial ou para os detalhes do projeto, se necessário
+    project.students.add(student_profile)  
+    return redirect('home') 
 
 @login_required
 def edit_project(request, project_id):
     project = get_object_or_404(Project, id=project_id)
 
-    # Verifica se o usuário é o autor (professor) do projeto
+    
     if project.author.user != request.user:
         raise Http404("Você não tem permissão para editar este projeto.")
 
@@ -114,13 +114,10 @@ def edit_project(request, project_id):
 
 @login_required
 def delete_comment(request, project_id, comment_id):
-    # Obter o projeto e o comentário
+    
     project = get_object_or_404(Project, id=project_id)
     comment = get_object_or_404(Comment, id=comment_id)
 
-    # Verificar permissões: 
-    # 1. O usuário é autor do comentário (alunos podem apagar seus próprios)
-    # 2. O usuário é professor e autor do projeto
     if request.user.profile == comment.author or (
         request.user.profile.role == 'teacher' and project.author == request.user.profile
     ):
@@ -128,5 +125,4 @@ def delete_comment(request, project_id, comment_id):
     else:
         messages.error(request, "Você não tem permissão para excluir este comentário.")
 
-    # Redirecionar para a página de detalhes do projeto
     return redirect('home')

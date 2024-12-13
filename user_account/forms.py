@@ -8,7 +8,7 @@ class ProfileForm(forms.ModelForm):
         required=False
     )
     
-    # Limite para o campo 'summary'
+    
     summary = forms.CharField(
         widget=forms.Textarea(attrs={
             'maxlength': '170',
@@ -26,7 +26,7 @@ class ProfileForm(forms.ModelForm):
     def clean_hard_skills(self):
         hard_skills = self.cleaned_data.get('hard_skills')
         
-        # Validando a quantidade de hard skills selecionadas
+       
         if len(hard_skills) < 6:
             raise forms.ValidationError("Você precisa selecionar pelo menos 6 habilidades.")
         if len(hard_skills) > 6:

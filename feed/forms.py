@@ -7,7 +7,7 @@ class CommentForm(forms.ModelForm):
         fields = ['body']
         widgets = {
             'body': forms.Textarea(attrs={
-                'class': 'form-field',  # Classe CSS para estilização
+                'class': 'form-field',  
                 'placeholder': 'Escreva um comentário...',
                 'rows': 3,
             }),
@@ -16,7 +16,7 @@ class CommentForm(forms.ModelForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['title', 'body', 'calendar', 'image', 'pdf_file', 'status']  # Inclui o campo 'status'
+        fields = ['title', 'body', 'calendar', 'image', 'pdf_file', 'status']  
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-field',
@@ -34,18 +34,18 @@ class ProjectForm(forms.ModelForm):
             'image': forms.ClearableFileInput(attrs={
                 'class': 'form-field',
             }),
-            'pdf_file': forms.ClearableFileInput(attrs={  # Adiciona o campo para PDF
+            'pdf_file': forms.ClearableFileInput(attrs={  
                 'class': 'form-field',
             }),
             'status': forms.Select(attrs={
-                'class': 'form-field',  # Adiciona a classe para estilizar
+                'class': 'form-field',  
             }),
         }
         labels = {
-            'title': '',  # Oculta o rótulo do campo 'title'
+            'title': '',  
             'body': '',
             'calendar': '',
             'image': 'Foto da IC',
-            'pdf_file': 'Ementa do IC',  # Oculta o rótulo do campo 'pdf_file'
-            'status': 'Status',  # Rótulo do campo 'status'
+            'pdf_file': 'Ementa do IC',  
+            'status': 'Status',  
         }

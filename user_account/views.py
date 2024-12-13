@@ -57,7 +57,7 @@ def edit_profile(request):
 def edit_avatar(request):
     profile = request.user.profile 
     if request.method == 'POST':
-        # Verifica se há um arquivo de imagem enviado
+        
         if 'profile_image' in request.FILES:
             profile.profile_image = request.FILES['profile_image']
             profile.save()  
@@ -68,7 +68,7 @@ def edit_avatar(request):
 def edit_background(request):
     profile = request.user.profile  
     if request.method == 'POST':
-        # Verifica se há um arquivo de imagem enviado
+        
         if 'profile_background_image' in request.FILES:
             profile.profile_background_image = request.FILES['profile_background_image']
             profile.save()  
@@ -85,12 +85,12 @@ def profile(request, username):
     student_projects = profile.joined_projects.all() if profile.is_student() else None
 
     if request.method == 'POST':
-        # Atualiza o resumo, se enviado
+        
         if 'summary' in request.POST:
             profile.user.summary = request.POST['summary']
             profile.user.save()
 
-        # Atualiza as hard skills, se enviadas
+        
         if 'hard_skills' in request.POST:
             selected_skill = request.POST.get('hard_skills')
             if selected_skill in dict(Profile.HARD_SKILL_CHOICES).keys():
@@ -143,7 +143,7 @@ def teacher_projects_view(request):
     
 @login_required
 def edit_profile(request):
-    profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
+    profile = Profile.objects.get(user=request.user)  
 
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
